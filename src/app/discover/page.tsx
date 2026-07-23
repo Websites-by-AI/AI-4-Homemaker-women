@@ -120,10 +120,6 @@ export default function DiscoverPage() {
   const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
   async function fetchCategories() {
     try {
       // First try to seed
@@ -137,6 +133,11 @@ export default function DiscoverPage() {
       console.error(e);
     }
   }
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchCategories();
+  }, []);
 
   function handleAnswer(optionTags: string[]) {
     const newAnswers = [...answers, optionTags];

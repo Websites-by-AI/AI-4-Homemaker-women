@@ -3,8 +3,9 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "TeamCoder - مدیریت تیم و پروژه",
-  description: "پلتفرم مدیریت تیم برنامه‌نویسی و پروژه‌ها",
+  title: "دیجی‌آموزش | آکادمی دیجیتال کسب‌وکارهای خانگی با هوش مصنوعی",
+  description:
+    "برای هر کسب‌وکار خانگی یک مسیر آموزشی کامل: یادگیری مهارت، استفاده از هوش مصنوعی، ساخت برند، تولید محتوا و فروش آنلاین. دورهٔ ۱۰ قسمتی برای ۱۵ حوزه + وبلاگ و استودیوی ویدیو.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

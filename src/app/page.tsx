@@ -1,235 +1,285 @@
+"use client";
+
+import { useEffect, useState, type CSSProperties } from "react";
 import Link from "next/link";
+import { businesses, episodes } from "@/lib/digi-content";
+import { HERO_IMG } from "@/lib/hero-img";
+import "./digi.css";
 
-export default function HomePage() {
+const toFa = (n: number | string) =>
+  String(n).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[+d]);
+
+const STEPS = [
+  { c: "#6C4CF1", s: "#EEE9FE", t: "یادگیری مهارت", d: "آموزش اصولی حرفه‌ات؛ از مبانی تا نکته‌های حرفه‌ای بازار." },
+  { c: "#F2503E", s: "#FFE9E6", t: "استفاده از هوش مصنوعی", d: "کار با ابزارهای AI برای ایده، طراحی، متن و تصویر." },
+  { c: "#0FA896", s: "#DFF7F4", t: "ساخت برند", d: "نام، لوگو، رنگ و شخصیت برند که ماندگار می‌شود." },
+  { c: "#E8920C", s: "#FFF1DA", t: "تولید محتوا", d: "ریلز، استوری، کپشن و تقویم محتوایی حرفه‌ای." },
+  { c: "#5D63EA", s: "#E9EBFE", t: "فروش آنلاین", d: "راه‌اندازی فروش، پاسخ به مشتری و مدیریت سفارش‌ها." },
+];
+const PALETTE = [
+  ["#6C4CF1", "#EEE9FE"], ["#F2503E", "#FFE9E6"], ["#0FA896", "#DFF7F4"], ["#E8920C", "#FFF1DA"],
+  ["#5D63EA", "#E9EBFE"], ["#D43D96", "#FCE9F4"], ["#2E90D4", "#E4F2FB"], ["#7A9E1E", "#F0F7DF"],
+];
+const FEATURED = [
+  { href: "/blog/roadmap-first-sale", c: "#6C4CF1", s: "#EEE9FE", tag: "🗺️ شروع مسیر", t: "از ایده تا اولین فروش؛ نقشهٔ راه کسب‌وکار خانگی", p: "قبل از هر ابزاری، نقشهٔ راه لازم داری: چه آموزشی، چه محتوایی و سایتت را کجا بگذاری تا به اولین فروش برسی.", m: "۷" },
+  { href: "/blog/ai-content-techniques", c: "#0FA896", s: "#DFF7F4", tag: "🤖 هوش مصنوعی", t: "تکنیک‌های تولید محتوا با AI که واقعاً جواب می‌دهند", p: "پرامپت‌نویسی درست، قاعدهٔ ۵×۱، ساخت تقویم ۳۰ روزه و تبدیل کپشن به مقالهٔ سئوشدهٔ سایت.", m: "۶" },
+  { href: "/blog/website-for-home-biz", c: "#5D63EA", s: "#E9EBFE", tag: "🌐 ساخت سایت", t: "چرا کسب‌وکار خانگی‌ات به سایت نیاز دارد و چطور بسازیش؟", p: "پیج ویترین است اما سایت مغازهٔ خود توست؛ راهنمای صفر تا صد دامنه، لندینگ، فرم سفارش و سئو.", m: "۶" },
+];
+
+function LogoMark() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      {/* Header */}
-      <header className="border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-              </svg>
-            </div>
-            <span className="text-xl font-bold text-gray-900">TeamCoder</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/login"
-              className="px-5 py-2.5 text-gray-700 font-medium hover:text-blue-600 transition-colors"
-            >
-              ورود
-            </Link>
-            <Link
-              href="/register"
-              className="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
-            >
-              ثبت‌نام
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
-        <div className="text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-6">
-            🚀 پلتفرم مدیریت تیم برنامه‌نویسی
-          </div>
-          <h1 className="text-5xl font-bold text-gray-900 leading-tight mb-6">
-            تیم خود را{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-              هوشمندانه
-            </span>{" "}
-            مدیریت کنید
-          </h1>
-          <p className="text-xl text-gray-500 mb-10 leading-relaxed">
-            با TeamCoder پروژه‌ها، وظایف، پرداخت‌ها و ارتباطات تیم خود را در یک
-            پلتفرم واحد مدیریت کنید. مناسب تیم‌های کوچک و بزرگ.
-          </p>
-          <div className="flex items-center justify-center gap-4">
-            <Link
-              href="/register"
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium text-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/25"
-            >
-              شروع رایگان
-            </Link>
-            <Link
-              href="/login"
-              className="px-8 py-4 bg-white text-gray-700 rounded-xl font-medium text-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all"
-            >
-              ورود به حساب
-            </Link>
-            <Link
-              href="/collaborate"
-              className="px-8 py-4 bg-gradient-to-r from-violet-600 to-purple-600 text-white rounded-xl font-medium text-lg hover:from-violet-700 hover:to-purple-700 transition-all shadow-lg shadow-violet-500/25"
-            >
-              🎬 همکاری با ما
-            </Link>
-            <Link
-              href="/academy"
-              className="px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-medium text-lg hover:from-amber-600 hover:to-orange-600 transition-all shadow-lg shadow-amber-500/25"
-            >
-              🌟 آکادمی
-            </Link>
-            <Link
-              href="/discover"
-              className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl font-medium text-lg hover:from-emerald-600 hover:to-teal-600 transition-all shadow-lg shadow-emerald-500/25"
-            >
-              🔍 کشف کسب‌وکار
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-gray-900">امکانات کلیدی</h2>
-          <p className="text-gray-500 mt-3">هر آنچه برای مدیریت تیم نیاز دارید</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <FeatureCard
-            icon="📁"
-            title="مدیریت پروژه‌ها"
-            desc="ایجاد، پیگیری و مدیریت پروژه‌ها با جزئیات کامل شامل بودجه، مهلت و اعضای تیم"
-          />
-          <FeatureCard
-            icon="✅"
-            title="مدیریت وظایف"
-            desc="تعریف وظایف، تعیین اولویت و مسئول، و پیگیری وضعیت انجام هر وظیفه"
-          />
-          <FeatureCard
-            icon="💬"
-            title="پیام‌رسانی"
-            desc="ارتباط مستقیم بین اعضای تیم با سیستم پیام‌رسانی داخلی"
-          />
-          <FeatureCard
-            icon="💰"
-            title="مدیریت پرداخت‌ها"
-            desc="ثبت و پیگیری پرداخت‌ها به اعضای تیم برای هر پروژه"
-          />
-          <FeatureCard
-            icon="🔔"
-            title="اعلان‌ها"
-            desc="دریافت اعلان‌های لحظه‌ای برای وظایف جدید، پیام‌ها و پرداخت‌ها"
-          />
-          <FeatureCard
-            icon="👥"
-            title="مدیریت تیم"
-            desc="مشاهده اعضای تیم با نقش‌های مختلف: کارفرما، برنامه‌نویس و مدیر پروژه"
-          />
-        </div>
-      </section>
-
-      {/* Roles */}
-      <section className="bg-white border-t border-gray-100 py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900">نقش‌های کاربری</h2>
-            <p className="text-gray-500 mt-3">هر نقش دسترسی‌های مخصوص خود را دارد</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 border border-green-100">
-              <div className="text-4xl mb-4">💼</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">کارفرما</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-center gap-2">✓ ایجاد پروژه جدید</li>
-                <li className="flex items-center gap-2">✓ مشاهده پیشرفت پروژه‌ها</li>
-                <li className="flex items-center gap-2">✓ مدیریت پرداخت‌ها</li>
-                <li className="flex items-center gap-2">✓ ارتباط با تیم</li>
-              </ul>
-            </div>
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100">
-              <div className="text-4xl mb-4">👨‍💻</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">برنامه‌نویس</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-center gap-2">✓ مشاهده وظایف اختصاص داده شده</li>
-                <li className="flex items-center gap-2">✓ بروزرسانی وضعیت وظایف</li>
-                <li className="flex items-center gap-2">✓ مشاهده پروژه‌ها</li>
-                <li className="flex items-center gap-2">✓ ارتباط با تیم</li>
-              </ul>
-            </div>
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 border border-purple-100">
-              <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">مدیر پروژه</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-center gap-2">✓ مدیریت کامل پروژه‌ها</li>
-                <li className="flex items-center gap-2">✓ ایجاد و تخصیص وظایف</li>
-                <li className="flex items-center gap-2">✓ مدیریت اعضای تیم</li>
-                <li className="flex items-center gap-2">✓ مشاهده آمار و گزارش‌ها</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Collaboration CTA */}
-      <section className="bg-gradient-to-r from-violet-600 to-purple-600 py-16">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <div className="text-5xl mb-4">🎬</div>
-          <h2 className="text-3xl font-bold text-white mb-4">
-            به تیم تولید محتوای ما بپیوندید!
-          </h2>
-          <p className="text-violet-100 text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
-            اگر به ساخت ریلز و تولید محتوای ویدیویی علاقه‌مندید، با ما همکاری کنید.
-            آموزش رایگان، پروژه آزمایشی و شروع همکاری حرفه‌ای.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link
-              href="/collaborate"
-              className="px-8 py-4 bg-white text-violet-700 rounded-xl font-bold text-lg hover:bg-violet-50 transition-all shadow-lg"
-            >
-              مشاهده مراحل همکاری ←
-            </Link>
-            <Link
-              href="/academy"
-              className="px-8 py-4 bg-violet-800 text-white rounded-xl font-bold text-lg hover:bg-violet-900 transition-all shadow-lg"
-            >
-              🌟 آکادمی اقتصاد خالق ←
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-              </svg>
-            </div>
-            <span className="text-lg font-bold">TeamCoder</span>
-          </div>
-          <p className="text-gray-400 text-sm">
-            پلتفرم مدیریت تیم برنامه‌نویسی و پروژه‌ها
-          </p>
-          <p className="text-gray-500 text-xs mt-4">
-            © ۲۰۲۴ TeamCoder. تمامی حقوق محفوظ است.
-          </p>
-        </div>
-      </footer>
-    </div>
+    <span className="logo-mark">
+      <svg viewBox="0 0 64 64" fill="none">
+        <path d="M31.5 13 5 25l26.5 12L58 25 31.5 13z" fill="#FFF7EF" />
+        <path d="M14 30.5V39c0 4.4 7.8 8 17.5 8s17.5-3.6 17.5-8V30.5l-17.5 8z" fill="#FFF7EF" opacity=".9" />
+      </svg>
+    </span>
   );
 }
 
-function FeatureCard({
-  icon,
-  title,
-  desc,
-}: {
-  icon: string;
-  title: string;
-  desc: string;
-}) {
+export default function HomePage() {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [q, setQ] = useState("");
+  const [openEps, setOpenEps] = useState<Set<number>>(new Set());
+  const [msg, setMsg] = useState("");
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll);
+    const io = new IntersectionObserver(
+      (es) => es.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } }),
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+    return () => { window.removeEventListener("scroll", onScroll); io.disconnect(); };
+  }, [q]);
+
+  const list = !q.trim()
+    ? businesses
+    : businesses.filter((b) => b.name.includes(q.trim()) || b.items.some((t) => t.includes(q.trim())));
+  const pct = Math.round((openEps.size / episodes.length) * 100);
+
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 hover:shadow-md transition-shadow">
-      <div className="text-4xl mb-4">{icon}</div>
-      <h3 className="text-lg font-bold text-gray-900 mb-3">{title}</h3>
-      <p className="text-gray-500 leading-relaxed">{desc}</p>
+    <div className="digisite">
+      {/* ======= HEADER ======= */}
+      <header className={`ds-header${scrolled ? " scrolled" : ""}`}>
+        <div className="container header-inner">
+          <Link href="/" className="logo"><LogoMark /> دیجی‌آموزش</Link>
+          <nav className={`main-nav${menuOpen ? " open" : ""}`} id="mainNav" onClick={(e) => { if ((e.target as HTMLElement).tagName === "A") setMenuOpen(false); }}>
+            <a href="#path">مسیر رشد</a>
+            <a href="#businesses">حوزه‌های کسب‌وکار</a>
+            <a href="#course">ساختار دوره</a>
+            <Link href="/blog">وبلاگ</Link>
+            <Link href="/video">استودیوی ویدیو</Link>
+            <Link href="/academy">آکادمی</Link>
+          </nav>
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <Link href="/login" className="btn btn-ghost btn-header" style={{ padding: "10px 20px" }}>ورود</Link>
+            <Link href="/register" className="btn btn-primary btn-header">ثبت‌نام</Link>
+          </div>
+          <button className="menu-toggle" aria-label="منو" onClick={() => setMenuOpen((v) => !v)}>☰</button>
+        </div>
+      </header>
+
+      {/* ======= HERO ======= */}
+      <section className="hero">
+        <div className="blob blob-1"></div>
+        <div className="blob blob-2"></div>
+        <div className="blob blob-3"></div>
+        <div className="container hero-grid">
+          <div>
+            <span className="hero-badge"><span className="dot"></span> دیجی‌آموزش؛ آکادمی دیجیتال کسب‌وکارهای خانگی با هوش مصنوعی</span>
+            <h1>کسب‌وکار خانگی‌ات را <br />از صفر تا <span className="hl">فروش آنلاین</span> پیش ببر</h1>
+            <p className="lead">برای هر کسب‌وکار خانگی یک مسیر آموزشی کامل می‌سازیم: یادگیری مهارت، استفاده از هوش مصنوعی، ساخت برند، تولید محتوا و فروش آنلاین؛ همه مرحله‌به‌مرحله.</p>
+            <div className="hero-cta">
+              <a href="#businesses" className="btn btn-primary">حوزه‌ات را انتخاب کن 🚀</a>
+              <Link href="/video" className="btn btn-ghost">🎬 استودیوی ویدیو</Link>
+            </div>
+            <div className="hero-stats">
+              <div className="stat"><b>۱۵+</b><span>حوزهٔ کسب‌وکار خانگی</span></div>
+              <div className="stat"><b>۱۰</b><span>قسمت در هر دوره</span></div>
+              <div className="stat"><b>۵</b><span>مرحلهٔ مسیر رشد</span></div>
+            </div>
+          </div>
+          <div className="hero-media">
+            <div className="chip chip-1"><span className="icos" style={{ background: "var(--primary-soft)" }}>✨</span> ایده‌پردازی با AI</div>
+            <div className="chip chip-2"><span className="icos" style={{ background: "var(--teal-soft)" }}>🎬</span> ریلز و استوری</div>
+            <div className="chip chip-3"><span className="icos" style={{ background: "var(--coral-soft)" }}>🛒</span> فروش آنلاین</div>
+            <div className="frame"><img src={HERO_IMG} alt="کسب‌وکار خانگی با هوش مصنوعی" width={1100} height={684} fetchPriority="high" /></div>
+          </div>
+        </div>
+      </section>
+
+      {/* ======= PATH ======= */}
+      <section className="block" id="path">
+        <div className="container">
+          <div className="sec-head reveal">
+            <span className="sec-tag">مدل آموزشی</span>
+            <h2>مسیر ۵ مرحله‌ای رشد برای هر کسب‌وکار</h2>
+            <p>هر دوره دقیقاً همین مسیر را طی می‌کند؛ از یادگیری مهارت تا زمان فروش. نتیجه؟ فقط تولید محتوا یاد نمی‌گیری، یک کسب‌وکار کامل راه می‌اندازی.</p>
+          </div>
+          <div className="path">
+            {STEPS.map((s, i) => (
+              <div className="step reveal" key={s.t} style={{ "--step-color": s.c, "--step-soft": s.s } as CSSProperties}>
+                {i > 0 && <span className="conn">◀</span>}
+                <div className="num">{toFa(i + 1)}</div>
+                <h3>{s.t}</h3>
+                <p>{s.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ======= BUSINESSES ======= */}
+      <section className="block" id="businesses" style={{ background: "var(--bg-soft)" }}>
+        <div className="container">
+          <div className="sec-head reveal">
+            <span className="sec-tag coral">۱۵ حوزهٔ آماده</span>
+            <h2>برای کدام کسب‌وکار خانگی دوره می‌خواهی؟</h2>
+            <p>برای هر حوزه، آموزش‌های مخصوص خودش بر پایهٔ هوش مصنوعی طراحی شده است؛ جست‌وجو کن و حوزه‌ات را پیدا کن.</p>
+          </div>
+          <div className="tools-bar reveal">
+            <div className="search-box">
+              <input type="text" value={q} onChange={(e) => setQ(e.target.value)} placeholder="جست‌وجو… مثلاً کیک، شمع، خیاطی" />
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
+            </div>
+          </div>
+          <div className="biz-grid">
+            {list.map((b, i) => {
+              const [c, soft] = PALETTE[businesses.indexOf(b) % PALETTE.length] as string[];
+              return (
+                <div className="biz-card reveal in" key={b.name} style={{ "--card-color": c, "--card-soft": soft } as CSSProperties}>
+                  <div className="biz-icon">{b.icon}</div>
+                  <h3>{b.name}<span className="ai-note">با AI</span></h3>
+                  <ul>{b.items.map((t) => <li key={t}>{t}</li>)}</ul>
+                </div>
+              );
+            })}
+          </div>
+          <p className={`no-result${list.length === 0 ? " show" : ""}`}>موردی پیدا نشد؛ کلمهٔ دیگری را امتحان کن 🙂</p>
+        </div>
+      </section>
+
+      {/* ======= COURSE ======= */}
+      <section className="block" id="course">
+        <div className="container">
+          <div className="sec-head reveal">
+            <span className="sec-tag teal">ساختار هر دوره</span>
+            <h2>۱۰ قسمت؛ از آشنایی تا توسعه</h2>
+            <p>برای هر کسب‌وکار یک دورهٔ ۸ تا ۱۰ قسمتی می‌سازیم. روی هر قسمت بزن تا ببینی داخلش چه خبر است.</p>
+          </div>
+          <div className="course-wrap">
+            {episodes.map((e, i) => (
+              <div className={`episode reveal${openEps.has(i) ? " open done" : ""}`} key={e.t}>
+                <div className="ep-num">{toFa(i + 1)}</div>
+                <div className="ep-body">
+                  <div className="ep-head" onClick={() => setOpenEps((prev) => { const n = new Set(prev); n.has(i) ? n.delete(i) : n.add(i); return n; })}>
+                    <h3>{e.t}</h3>
+                    <span className="arrow">▾</span>
+                  </div>
+                  <div className="ep-desc"><p>{e.d}</p></div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="course-actions reveal">
+            <div className="progress-pill">
+              <span>پیش‌نمایش مسیر یادگیری:</span>
+              <span className="progress-bar"><i style={{ width: pct + "%" }}></i></span>
+              <b style={{ color: "var(--primary)" }}>{toFa(pct)}٪</b>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ======= BLOG PREVIEW ======= */}
+      <section className="block" id="blog">
+        <div className="container">
+          <div className="sec-head reveal">
+            <span className="sec-tag coral">وبلاگ آموزشی</span>
+            <h2>برای هر کسب‌وکار، یک راهنمای عملی</h2>
+            <p>در وبلاگ برای هر حوزه می‌گوییم دقیقاً چه آموزش‌هایی لازم داری، با چه تکنیک‌هایی محتوا بسازی و سایتت را چطور راه بیندازی.</p>
+          </div>
+          <div className="blog-grid">
+            {FEATURED.map((f) => (
+              <Link className="post-card reveal" href={f.href} key={f.href} style={{ "--card-color": f.c, "--card-soft": f.s } as CSSProperties}>
+                <span className="p-tag">{f.tag}</span>
+                <h3>{f.t}</h3>
+                <p>{f.p}</p>
+                <div className="p-meta"><span>⏱ {f.m} دقیقه مطالعه</span><b>خواندن راهنما ←</b></div>
+              </Link>
+            ))}
+          </div>
+          <div className="blog-cta reveal">
+            <Link href="/blog" className="btn btn-primary">مشاهدهٔ همهٔ ۱۸ راهنما 📚</Link>
+            <Link href="/video" className="btn btn-ghost" style={{ marginInlineStart: 10 }}>🎬 استودیوی ویدیو</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ======= WHY ======= */}
+      <section className="block" id="why">
+        <div className="container">
+          <div className="why reveal">
+            <span className="sec-tag" style={{ background: "rgba(255,255,255,.14)", color: "#FFC86B" }}>چرا این مدل؟</span>
+            <h2>نه فقط آموزش؛ راه‌اندازی کامل کسب‌وکار</h2>
+            <p>این ساختار باعث می‌شود هر شرکت‌کننده فقط تولید محتوا یاد نگیرد، بلکه از صفر تا راه‌اندازی و بازاریابی یک کسب‌وکار خانگی را مرحله‌به‌مرحله تجربه کند.</p>
+            <div className="why-grid">
+              <div className="why-card">
+                <div className="w-ico"><svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8" /></svg></div>
+                <h3>هم‌راستا با پلتفرم آموزش و تولید محتوا</h3>
+                <p>این رویکرد دقیقاً با پروژه‌ای که برای پلتفرم آموزش و تولید محتوا در ذهن داری هم‌خوانی دارد و روی همان زیرساخت سوار می‌شود.</p>
+              </div>
+              <div className="why-card">
+                <div className="w-ico"><svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7l9-4 9 4-9 4-9-4z" /><path d="M3 12l9 4 9-4" /><path d="M3 17l9 4 9-4" /></svg></div>
+                <h3>قابل تکرار برای هر حوزه</h3>
+                <p>یک قالب ثابت ۵ مرحله‌ای و ۱۰ قسمتی که برای هر کسب‌وکار خانگی فقط با محتوای تخصصی همان حوزه پر می‌شود.</p>
+              </div>
+              <div className="why-card">
+                <div className="w-ico"><svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 17l6-6 4 4 8-8" /><path d="M14 7h7v7" /></svg></div>
+                <h3>خروجی واقعی، نه تئوری</h3>
+                <p>در پایان هر دوره، شرکت‌کننده برند، پیج، محتوا و اولین سفارش‌هایش را دارد؛ یعنی نتیجهٔ ملموس و قابل لمسی.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ======= CTA ======= */}
+      <section className="block" id="cta">
+        <div className="container">
+          <div className="cta-box reveal">
+            <span className="sec-tag coral">عضویت در دیجی‌آموزش</span>
+            <h2>آماده‌ای کسب‌وکارت رشد کند؟</h2>
+            <p>ثبت‌نام کن و جزو اولین افرادی باش که دورهٔ ۱۰ قسمتی کسب‌وکار خانگی‌شان با هوش مصنوعی را تجربه می‌کنند.</p>
+            <form className="cta-form" onSubmit={(e) => { e.preventDefault(); setMsg("عالی! حالا با ثبت‌نام واقعی حسابت را بساز 🎉"); }}>
+              <input type="text" id="nameInput" placeholder="نام و حوزهٔ کسب‌وکارت…" required />
+              <input type="email" id="emailInput" placeholder="ایمیل یا شماره تماس" required />
+              <button type="submit" className="btn btn-primary">ثبت در لیست انتظار</button>
+            </form>
+            <p className="form-msg">{msg}</p>
+            <p className="cta-note">یا مستقیم <Link href="/register" style={{ color: "var(--primary)", fontWeight: 700 }}>حساب کاربری</Link> بساز 💜</p>
+          </div>
+        </div>
+      </section>
+
+      {/* ======= FOOTER ======= */}
+      <footer className="ds-footer">
+        <div className="container">
+          <Link href="/" className="logo"><LogoMark /> دیجی‌آموزش</Link>
+          <div className="foot-links">
+            <a href="#path">مسیر رشد</a>
+            <a href="#businesses">حوزه‌ها</a>
+            <a href="#course">ساختار دوره</a>
+            <Link href="/blog">وبلاگ</Link>
+            <Link href="/video">استودیوی ویدیو</Link>
+            <Link href="/register">ثبت‌نام</Link>
+          </div>
+          <p>دیجی‌آموزش 🎓 آکادمی دیجیتال کسب‌وکارهای خانگی — از ایده تا برند آنلاین</p>
+        </div>
+      </footer>
     </div>
   );
 }

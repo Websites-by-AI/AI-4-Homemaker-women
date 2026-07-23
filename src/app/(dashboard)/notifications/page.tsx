@@ -24,10 +24,6 @@ export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
-
   async function fetchNotifications() {
     try {
       const res = await fetch("/api/notifications");
@@ -41,6 +37,11 @@ export default function NotificationsPage() {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchNotifications();
+  }, []);
 
   async function markAllAsRead() {
     try {

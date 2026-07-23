@@ -37,10 +37,6 @@ export default function TasksPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
   async function fetchTasks() {
     try {
       const res = await fetch("/api/tasks");
@@ -54,6 +50,11 @@ export default function TasksPage() {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchTasks();
+  }, []);
 
   async function handleStatusChange(taskId: number, newStatus: string) {
     try {
