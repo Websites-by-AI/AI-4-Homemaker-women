@@ -73,6 +73,7 @@ export default function HomePage() {
             <Link href="/blog">وبلاگ</Link>
             <Link href="/video">استودیوی ویدیو</Link>
             <Link href="/academy">آکادمی</Link>
+            <Link href="/assistant" style={{ color: "var(--primary)", fontWeight: 800 }}>🤖 مربی هوشمند</Link>
           </nav>
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
             <Link href="/login" className="btn btn-ghost btn-header" style={{ padding: "10px 20px" }}>ورود</Link>
