@@ -7,10 +7,8 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
-  const session = await getSession();
-  if (!session) {
-    return NextResponse.json({ error: "برای گفت‌وگو با مربی هوشمند ابتدا وارد شوید" }, { status: 401 });
-  }
+  // ورود اختیاری: کاربران واردشده پاسخ شخصی‌سازی‌شده با نامشان می‌گیرند، مهمان‌ها هم جواب دارند
+  const session = await getSession().catch(() => null);
 
   let body: { message?: string; history?: { role: "user" | "assistant"; content: string }[] };
   try {
@@ -28,9 +26,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       demo: true,
       answer:
-        "سلام! 🌸 من مربی هوشمند دیجی‌آموزش هستم. فعلاً کلید OpenRouter تنظیم نشده، " +
-        "به‌همین خاطر در حالت نمایشی‌ام. وقتی مدیر سایت متغیر OPENROUTER_API_KEY را در Vercel اضافه کند، " +
-        "بر اساس PDFها و ویدیوهای آموزشیِ کتابخانهٔ دانش، شخصی‌سازی‌شده جوابت را می‌دهم! 🤖",
+        "سلام! 🌸 من مربی هوشمند دیجی‌آموزش هستم. فعلاً موتور هوش مصنوعی وصل نشده (کلید OPENROUTER_API_KEY یا HF_TOKEN لازم است)، " +
+        "به‌همین خاطر در حالت نمایشی‌ام. بعد از اتصال، بر اساس PDFها، ویدیوها و مقالات آموزشی، قدم‌به‌قدم جوابت می‌دهم! 🤖",
       sources: [],
     });
   }
@@ -44,7 +41,7 @@ export async function POST(req: NextRequest) {
     const { answer, sources } = await answerWithRag({
       question: message,
       history,
-      userName: session.name,
+      userName: session?.name,
     });
     return NextResponse.json({ answer, sources });
   } catch (e) {

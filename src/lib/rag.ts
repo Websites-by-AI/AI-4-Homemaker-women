@@ -8,7 +8,65 @@
 import { db } from "@/db";
 import { aiDocuments, aiChunks } from "@/db/schema";
 import { eq, desc, sql } from "drizzle-orm";
-import { embedTexts, chatCompletion, type ChatMessage } from "@/lib/ai";
+import { embedTexts, chatCompletion, aiBackend, type ChatMessage } from "@/lib/ai";
+import seedData from "@/data/knowledge-seed.json";
+
+/** کانوانسیون e5: برای بک‌اند HF به query/passage پیشوند می‌زنیم */
+const qPrefix = (t: string) => (aiBackend() === "hf" ? "query: " + t : t);
+const pPrefix = (t: string) => (aiBackend() === "hf" ? "passage: " + t : t);
+
+// ── دانش آمادهٔ سایت (بدون نیاز به دیتابیس — برای Vercel قبل از Neon) ──
+type SeedChunk = { content: string; title: string; vec: number[] | null };
+let seedTexts: SeedChunk[] | null = null;
+let seedVecsReady: Promise<SeedChunk[]> | null = null;
+
+function buildSeedTexts(): SeedChunk[] {
+  const out: SeedChunk[] = [];
+  for (const a of seedData.articles as { slug: string; title: string; category: string; introducer: string; need: string[]; content: string[]; site: string[]; tip: string }[]) {
+    const body = `عنوان: ${a.title} (${a.category})\nمقدمه: ${a.introducer}\nآموزش‌های لازم: ${a.need.join("؛ ")}\nتکنیک‌های تولید محتوا: ${a.content.join("؛ ")}\nتکنیک‌های ساخت سایت: ${a.site.join("؛ ")}\nنکتهٔ طلایی: ${a.tip}`;
+    out.push(...chunkText(body, 1200, 150).map((c) => ({ content: c, title: `مقاله: ${a.title}`, vec: null })));
+  }
+  for (const b of seedData.businesses as { name: string; items: string[] }[]) {
+    out.push({ content: `کسب‌وکار خانگی «${b.name}»: ${b.items.join("؛ ")}`, title: `کسب‌وکار: ${b.name}`, vec: null });
+  }
+  for (const e of seedData.episodes as { title: string; description: string }[]) {
+    out.push({ content: `قسمت دوره — ${e.title}: ${e.description}`, title: `دوره: ${e.title}`, vec: null });
+  }
+  for (const v of seedData.videoScenarios as unknown as { name: string; title: string; hook: string; story: string[][]; veoPrompt: string }[]) {
+    const story = v.story.map((s) => (Array.isArray(s) ? s.join(" — ") : String(s))).join(" | ");
+    out.push(...chunkText(`سناریوی ویدیو «${v.name}» (${v.title})\nقلاب: ${v.hook}\nاستوری‌برد: ${story}\nپرامپت Veo: ${v.veoPrompt}`, 1200, 150)
+      .map((c) => ({ content: c, title: `سناریو: ${v.name}`, vec: null })));
+  }
+  return out;
+}
+
+/** embedding قطعات seed — یک‌بار در حافظهٔ هر instance */
+async function ensureSeedVecs(): Promise<SeedChunk[]> {
+  if (!seedTexts) seedTexts = buildSeedTexts();
+  if (seedTexts.every((s) => s.vec)) return seedTexts;
+  if (!seedVecsReady) {
+    seedVecsReady = (async () => {
+      const missing = seedTexts!.map((s, i) => ({ s, i })).filter((x) => !x.s.vec);
+      for (let i = 0; i < missing.length; i += 16) {
+        const batch = missing.slice(i, i + 16);
+        const vecs = await embedTexts(batch.map((x) => pPrefix(x.s.content)));
+        batch.forEach((x, j) => { x.s.vec = vecs[j]; });
+      }
+      return seedTexts!;
+    })().catch((e) => { seedVecsReady = null; throw e; });
+  }
+  return seedVecsReady;
+}
+
+function searchSeedHits(qVec: number[], k: number, minScore: number): SearchHit[] {
+  if (!seedTexts) return [];
+  return seedTexts
+    .filter((s) => s.vec)
+    .map((s) => ({ content: s.content, title: s.title, score: cosineSimilarity(qVec, s.vec!) }))
+    .filter((h) => h.score >= minScore)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, k);
+}
 
 /** تقسیم متن به قطعات با هم‌پوشانی (مناسب فارسی) */
 export function chunkText(text: string, size = 1200, overlap = 200): string[] {
@@ -65,7 +123,7 @@ export async function addDocument(params: {
 
   for (let s = 0; s < chunks.length; s += 32) {
     const batch = chunks.slice(s, s + 32);
-    const vectors = await embedTexts(batch);
+    const vectors = await embedTexts(batch.map(pPrefix));
     await db.insert(aiChunks).values(
       batch.map((content, j) => ({
         documentId: doc.id,
@@ -80,25 +138,39 @@ export async function addDocument(params: {
 
 export type SearchHit = { content: string; title: string; score: number };
 
-/** جستجوی معنایی: embedding پرسش + شباهت کسینوسی روی همهٔ قطعه‌ها */
+/** جستجوی معنایی: embedding پرسش + کسینوسی روی قطعه‌ها (دیتابیس؛ fallback: دانش آمادهٔ JSON) */
 export async function searchChunks(query: string, k = 5, minScore = 0.25): Promise<SearchHit[]> {
-  const [qVec] = await embedTexts([query]);
-  const rows = await db
-    .select({ content: aiChunks.content, embedding: aiChunks.embedding, title: aiDocuments.title })
-    .from(aiChunks)
-    .innerJoin(aiDocuments, eq(aiChunks.documentId, aiDocuments.id));
+  const [qVec] = await embedTexts([qPrefix(query)]);
 
-  const hits: SearchHit[] = [];
-  for (const r of rows) {
-    try {
-      const score = cosineSimilarity(qVec, JSON.parse(r.embedding || "[]"));
-      if (score >= minScore) hits.push({ content: r.content, title: r.title, score });
-    } catch {
-      /* نادیده بگیر */
+  // اول: دیتابیس (اسناد آپلودی مدیر)
+  let dbHits: SearchHit[] = [];
+  try {
+    const rows = await db
+      .select({ content: aiChunks.content, embedding: aiChunks.embedding, title: aiDocuments.title })
+      .from(aiChunks)
+      .innerJoin(aiDocuments, eq(aiChunks.documentId, aiDocuments.id));
+    for (const r of rows) {
+      try {
+        const score = cosineSimilarity(qVec, JSON.parse(r.embedding || "[]"));
+        if (score >= minScore) dbHits.push({ content: r.content, title: r.title, score });
+      } catch { /* نادیده بگیر */ }
     }
+  } catch {
+    dbHits = []; // دیتابیس هنوز وصل نیست (مثلاً قبل از Neon)
   }
-  hits.sort((a, b) => b.score - a.score);
-  return hits.slice(0, k);
+
+  // دوم: دانش آمادهٔ سایت — همیشه در دسترس
+  let seedHits: SearchHit[] = [];
+  try {
+    await ensureSeedVecs();
+    seedHits = searchSeedHits(qVec, k, minScore);
+  } catch (e) {
+    console.error("seed knowledge error:", e);
+  }
+
+  return [...dbHits, ...seedHits]
+    .sort((a, b) => b.score - a.score)
+    .slice(0, k);
 }
 
 export const ASSISTANT_SYSTEM_PROMPT = `تو «مربی هوشمند دیجی‌آموزش» هستی؛ دستیار آموزشی فارسی‌زبانِ آکادمی کسب‌وکارهای خانگی با هوش مصنوعی.

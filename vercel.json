@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "buildCommand": "npx drizzle-kit push --force && npm run build",
+  "buildCommand": "npx drizzle-kit push --force || echo 'skip-db-push (DB not ready)'; npm run build",
   "installCommand": "npm install"
 }
