@@ -56,5 +56,15 @@
 |---|---|
 | زمان اجرای APIها | `maxDuration = 60` ثانیه (مناسب پلن رایگان Vercel) |
 | حافظهٔ گفت‌وگو | ۶ پیام آخر به مدل داده می‌شود |
-| امنیت | چت فقط برای کاربران واردشده؛ افزودن/حذف سند فقط admin/manager |
-| تست محلی | `OPENROUTER_API_KEY` در `.env.local` بگذار و `npm run dev` |
+| امنیت | چت برای همه آزاد است (شخصی‌سازی با ورود)؛ افزودن/حذف سند فقط admin/manager |
+| تست محلی | `OPENROUTER_API_KEY` یا `HF_TOKEN` در `.env.local` بگذار و `npm run dev` |
+| بک‌اند AI | OpenRouter در اولویت، سپس HuggingFace Inference رایگان (Qwen2.5-72B + e5) |
+| بدون دیتابیس؟ | دانش آمادهٔ JSON (`knowledge-seed.json`) خودکار استفاده می‌شود تا RAG همیشه کار کند |
+
+## 📊 مانیتورینگ با Weights & Biases (wandb)
+
+- **افزودن دادهٔ تمرین:** `POST /api/ai/ingest` (PDF / یوتیوب / متن) — یا از پنل «کتابخانهٔ دانش» در `/assistant`
+- **لاگ خودکار گفت‌وگوها:** هر چت در جدول `ai_logs` ذخیره می‌شود (پرسش، پاسخ، منابع، امتیاز، تأخیر، بک‌اند)
+- **خروجی دیتاست:** `POST /api/ai/logs` با `{"format":"jsonl"}` (فقط admin) → فایل JSONL برای W&B Artifact یا fine-tune آینده
+- **اسپیس پایتون (`rag-space/`):** اگر `WANDB_API_KEY` را در Secrets بگذاری، خودش به پروژهٔ `digiamoozesh-rag` در W&B متریک لاگ می‌کند و هر ۵ گفت‌وگو، دیتاست را به‌صورت Artifact نسخه‌بندی‌شده آپلود می‌کند
+- ⚠️ نکته: wandb ابزار **مانیتورینگ و نسخه‌بندی داده** است، نه مدل هوش مصنوعی — پاسخ‌دهی از HF/OpenRouter می‌آید

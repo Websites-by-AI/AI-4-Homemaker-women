@@ -190,7 +190,9 @@ export async function answerWithRag(params: {
   question: string;
   history: ChatMessage[];
   userName?: string;
+  userId?: number;
 }): Promise<{ answer: string; sources: string[] }> {
+  const t0 = Date.now();
   const hits = await searchChunks(params.question, 5);
   const context = hits.length
     ? hits.map((h, i) => `--- منبع ${i + 1}: «${h.title}» ---\n${h.content}`).join("\n\n")
@@ -206,6 +208,21 @@ export async function answerWithRag(params: {
   ]);
 
   const sources = [...new Set(hits.map((h) => h.title))];
+
+  // 📊 لاگ گفت‌وگو در ai_logs (هم‌راستا با دیتاست W&B — برای مانیتورینگ و تمرین آینده)
+  try {
+    const { aiLogs } = await import("@/db/schema");
+    await db.insert(aiLogs).values({
+      question: params.question.slice(0, 4000),
+      answer: answer.slice(0, 8000),
+      sources: JSON.stringify(sources),
+      scores: JSON.stringify(hits.map((h) => Math.round(h.score * 1000) / 1000)),
+      backend: aiBackend() || "none",
+      latencyMs: Date.now() - t0,
+      userId: params.userId ?? null,
+    });
+  } catch { /* دیتابیس هنوز آماده نیست — بی‌اثر */ }
+
   return { answer, sources };
 }
 

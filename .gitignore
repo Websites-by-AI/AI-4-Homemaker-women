@@ -21,3 +21,6 @@
 *.log
 pg.log
 start-pg.mjs
+
+# W&B local runs
+wandb/

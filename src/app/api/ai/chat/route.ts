@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
       question: message,
       history,
       userName: session?.name,
+      userId: session?.userId,
     });
     return NextResponse.json({ answer, sources });
   } catch (e) {

@@ -391,3 +391,16 @@ export const aiDocumentsRelations = relations(aiDocuments, ({ many }) => ({
 export const aiChunksRelations = relations(aiChunks, ({ one }) => ({
   document: one(aiDocuments, { fields: [aiChunks.documentId], references: [aiDocuments.id] }),
 }));
+
+// ── AI observability: لاگ گفت‌وگوهای RAG (هماهنگ با W&B) ──
+export const aiLogs = pgTable("ai_logs", {
+  id: serial("id").primaryKey(),
+  question: text("question").notNull(),
+  answer: text("answer"),
+  sources: text("sources"), // JSON آرایه
+  scores: text("scores"),   // JSON آرایه
+  backend: varchar("backend", { length: 20 }),
+  latencyMs: integer("latency_ms"),
+  userId: integer("user_id").references(() => users.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
