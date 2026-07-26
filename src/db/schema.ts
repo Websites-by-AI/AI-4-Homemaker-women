@@ -362,3 +362,32 @@ export const affiliateReferralsRelations = relations(affiliateReferrals, ({ one 
     references: [users.id],
   }),
 }));
+
+// ── RAG Knowledge Base (DigiAmoozesh AI Assistant) ──────
+export const aiDocuments = pgTable("ai_documents", {
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 300 }).notNull(),
+  sourceType: varchar("source_type", { length: 20 }).notNull(), // pdf | youtube | text
+  sourceRef: text("source_ref"),
+  chunkCount: integer("chunk_count").notNull().default(0),
+  uploadedBy: integer("uploaded_by").references(() => users.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const aiChunks = pgTable("ai_chunks", {
+  id: serial("id").primaryKey(),
+  documentId: integer("document_id")
+    .notNull()
+    .references(() => aiDocuments.id, { onDelete: "cascade" }),
+  chunkIndex: integer("chunk_index").notNull(),
+  content: text("content").notNull(),
+  embedding: text("embedding"), // JSON آرایهٔ عددی — شباهت کسینوسی در اپلیکیشن
+});
+
+export const aiDocumentsRelations = relations(aiDocuments, ({ many }) => ({
+  chunks: many(aiChunks),
+}));
+
+export const aiChunksRelations = relations(aiChunks, ({ one }) => ({
+  document: one(aiDocuments, { fields: [aiChunks.documentId], references: [aiDocuments.id] }),
+}));

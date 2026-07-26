@@ -40,6 +40,7 @@ export default function SiteChrome({ active, children }: { active: string; child
             <Link href="/#businesses">حوزه‌های کسب‌وکار</Link>
             <Link href="/blog" className={active === "blog" ? "active" : ""}>وبلاگ</Link>
             <Link href="/video" className={active === "video" ? "active" : ""}>استودیوی ویدیو</Link>
+            <Link href="/assistant" className={active === "assistant" ? "active" : ""}>🤖 مربی هوشمند</Link>
             <Link href="/academy">آکادمی</Link>
           </nav>
           <Link href="/register" className="btn btn-primary btn-header">شروع مسیر</Link>
@@ -49,7 +50,7 @@ export default function SiteChrome({ active, children }: { active: string; child
       {children}
       <footer className="ds-footer">
         <div className="container">
-          <p>🎓 دیجی‌آموزش — آکادمی دیجیتال کسب‌وکارهای خانگی | <Link href="/" style={{ color: "var(--primary)", fontWeight: 700 }}>صفحهٔ اصلی</Link> · <Link href="/blog" style={{ color: "var(--primary)", fontWeight: 700 }}>وبلاگ</Link> · <Link href="/video" style={{ color: "var(--primary)", fontWeight: 700 }}>استودیوی ویدیو</Link></p>
+          <p>🎓 دیجی‌آموزش — آکادمی دیجیتال کسب‌وکارهای خانگی | <Link href="/" style={{ color: "var(--primary)", fontWeight: 700 }}>صفحهٔ اصلی</Link> · <Link href="/blog" style={{ color: "var(--primary)", fontWeight: 700 }}>وبلاگ</Link> · <Link href="/video" style={{ color: "var(--primary)", fontWeight: 700 }}>استودیوی ویدیو</Link> · <Link href="/business-model" style={{ color: "var(--primary)", fontWeight: 700 }}>مدل کسب‌وکار</Link> · <Link href="/assistant" style={{ color: "var(--primary)", fontWeight: 700 }}>مربی هوشمند 🤖</Link></p>
         </div>
       </footer>
     </div>
