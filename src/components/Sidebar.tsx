@@ -108,30 +108,26 @@ export default function Sidebar({ user }: SidebarProps) {
   const pathname = usePathname();
 
   const roleLabels: Record<string, string> = {
-    admin: "مدیر سیستم",
-    manager: "مدیر پروژه",
-    developer: "برنامه‌نویس",
-    client: "کارفرما",
+    admin: "ادمین",
+    manager: "مدیر آموزشی",
+    developer: "همکار محتوا",
+    client: "هنرجو",
   };
 
   return (
     <aside className="w-64 bg-white border-l border-gray-200 h-screen fixed top-0 right-0 flex flex-col shadow-sm">
-      {/* Logo */}
       <div className="p-6 border-b border-gray-100">
         <Link href="/dashboard" className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
-            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-            </svg>
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center text-xl">
+            🎓
           </div>
           <div>
-            <h1 className="text-lg font-bold text-gray-900">TeamCoder</h1>
-            <p className="text-xs text-gray-500">مدیریت تیم و پروژه</p>
+            <h1 className="text-lg font-bold text-gray-900">دیجی‌آموزش</h1>
+            <p className="text-xs text-gray-500">پنل آموزش و مربی هوشمند</p>
           </div>
         </Link>
       </div>
 
-      {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {menuItems.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
@@ -154,7 +150,6 @@ export default function Sidebar({ user }: SidebarProps) {
         })}
       </nav>
 
-      {/* User Info */}
       {user && (
         <div className="p-4 border-t border-gray-100">
           <div className="flex items-center gap-3 px-3 py-2">

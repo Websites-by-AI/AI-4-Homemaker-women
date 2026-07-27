@@ -4,6 +4,7 @@ import { aiConfigured } from "@/lib/ai";
 import { addDocument } from "@/lib/rag";
 import pdfParse from "@/lib/pdf";
 import { YoutubeTranscript } from "youtube-transcript";
+import { hasRealDatabase } from "@/lib/demo";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -19,7 +20,13 @@ export async function POST(req: NextRequest) {
   }
   if (!aiConfigured()) {
     return NextResponse.json(
-      { error: "ابتدا کلید OPENROUTER_API_KEY را در تنظیمات Vercel اضافه کنید" },
+      { error: "ابتدا کلید OPENROUTER_API_KEY یا HF_TOKEN را در تنظیمات Vercel اضافه کنید" },
+      { status: 503 }
+    );
+  }
+  if (!hasRealDatabase()) {
+    return NextResponse.json(
+      { error: "برای ذخیره و جست‌وجوی PDF و یوتیوبِ اختصاصی، ابتدا DATABASE_URL واقعی را در Vercel اضافه کنید" },
       { status: 503 }
     );
   }

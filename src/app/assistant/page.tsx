@@ -4,7 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import SiteChrome from "@/components/SiteChrome";
 
-type Msg = { role: "user" | "assistant"; content: string; sources?: string[]; demo?: boolean };
+type VideoSuggestion = { title: string; url: string; reason: string };
+type Msg = {
+  role: "user" | "assistant";
+  content: string;
+  sources?: string[];
+  videos?: VideoSuggestion[];
+  demo?: boolean;
+};
 type Doc = { id: number; title: string; sourceType: string; sourceRef: string | null; chunkCount: number; createdAt: string };
 
 const SUGGESTIONS = [
@@ -21,7 +28,7 @@ export default function AssistantPage() {
     {
       role: "assistant",
       content:
-        "سلام! من مربی هوشمند دیجی‌آموزش هستم 🤖🎓\nبر اساس PDFها، ویدیوها و منابع آموزشی سایت، قدم‌به‌قدم و شخصی‌سازی‌شده جوابت می‌دهم. چه چیزی می‌خواهی یاد بگیری?",
+        "سلام! من مربی هوشمند دیجی‌آموزش هستم 🤖🎓\nبر اساس PDFها، ویدیوها و منابع آموزشی سایت، قدم‌به‌قدم و شخصی‌سازی‌شده جوابت می‌دهم. برای هر سؤال هم چند لینک جست‌وجوی یوتیوب مرتبط بهت پیشنهاد می‌دهم ✨",
     },
   ]);
   const [input, setInput] = useState("");
@@ -39,12 +46,10 @@ export default function AssistantPage() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
-  // 💾 ذخیرهٔ تاریخچهٔ گفت‌وگو در مرورگر (مثل chat_history.json نسخهٔ قدیمی)
   useEffect(() => {
     try { localStorage.setItem("digi-chat", JSON.stringify(messages.slice(-50))); } catch { /* بی‌اثر */ }
   }, [messages]);
 
-  // 🔊 خواندن صوتی پاسخ با صدای فارسی مرورگر (جایگزین gTTS — رایگان و آفلاین)
   function speak(text: string, idx: number) {
     try {
       const synth = window.speechSynthesis;
@@ -80,6 +85,7 @@ export default function AssistantPage() {
       }
     } catch { /* بی‌اثر */ }
   }
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     try {
@@ -108,7 +114,13 @@ export default function AssistantPage() {
       const d = await r.json();
       setMessages((m) => [
         ...m,
-        { role: "assistant", content: d.answer || d.error || "متأسفم، خطایی پیش آمد 🙏", sources: d.sources, demo: d.demo },
+        {
+          role: "assistant",
+          content: d.answer || d.error || "متأسفم، خطایی پیش آمد 🙏",
+          sources: d.sources,
+          videos: d.videos,
+          demo: d.demo,
+        },
       ]);
     } catch {
       setMessages((m) => [...m, { role: "assistant", content: "ارتباط برقرار نشد؛ دوباره تلاش کن 🔄" }]);
@@ -155,13 +167,12 @@ export default function AssistantPage() {
     <SiteChrome active="assistant">
       <main className="as-main">
         <div className="container as-wrap">
-          {/* ── ستون چت ── */}
           <section className="as-chat">
             <div className="as-head">
               <div className="as-avatar">🤖</div>
               <div>
                 <h1>مربی هوشمند دیجی‌آموزش</h1>
-                <p>RAG — جواب از روی PDFها و ویدیوهای آموزشی خودت 📚</p>
+                <p>RAG — جواب از روی PDFها، ویدیوها و جست‌وجوی آموزشی یوتیوب 📚🎬</p>
               </div>
               <span className="as-badge">{docs.length} سند آموزشی</span>
               <button className="as-clear-btn" onClick={clearChat} title="پاک‌کردن تاریخچهٔ گفت‌وگو">🗑</button>
@@ -189,11 +200,31 @@ export default function AssistantPage() {
                         {speakingIdx === i ? "⏹ توقف صدا" : "🔊 گوش دادن"}
                       </button>
                     )}
-                    {m.demo && <span className="as-demo-tag">حالت نمایشی — کلید API تنظیم نشده</span>}
+                    {m.demo && <span className="as-demo-tag">حالت نمایشی — کلید API یا دیتابیس کامل هنوز تنظیم نشده</span>}
                     {!!m.sources?.length && (
                       <div className="as-sources">
                         <b>📖 منابع:</b>
                         {m.sources.map((s) => <span key={s} className="as-source-chip">{s}</span>)}
+                      </div>
+                    )}
+                    {!!m.videos?.length && (
+                      <div className="as-videos">
+                        <b>🎬 ویدیوهای پیشنهادی یوتیوب:</b>
+                        <div className="as-video-list">
+                          {m.videos.map((video) => (
+                            <a
+                              key={video.url}
+                              className="as-video-card"
+                              href={video.url}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <span className="as-video-title">{video.title}</span>
+                              <span className="as-video-reason">{video.reason}</span>
+                              <span className="as-video-cta">باز کردن در یوتیوب ↗</span>
+                            </a>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -229,7 +260,6 @@ export default function AssistantPage() {
             </form>
           </section>
 
-          {/* ── ستون کتابخانهٔ دانش ── */}
           <aside className="as-lib">
             <button className="as-lib-toggle" onClick={() => setLibraryOpen((v) => !v)}>
               📚 کتابخانهٔ دانش {libraryOpen ? "▲" : "▼"}
@@ -237,6 +267,7 @@ export default function AssistantPage() {
             <div className={`as-lib-body${libraryOpen ? " open" : ""}`}>
               <p className="as-lib-hint">
                 مدیر می‌تواند PDF آموزشی آپلود کند یا لینک ویدیوی یوتیوب بدهد تا مربی از روی همان‌ها جواب دهد.
+                اگر دیتابیس واقعی هنوز وصل نشده باشد، بخش آپلود در حالت دمو می‌ماند.
               </p>
 
               <label className={`as-drop${busy ? " busy" : ""}`}>

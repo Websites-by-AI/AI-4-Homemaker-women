@@ -5,16 +5,16 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const roles = [
-  { value: "client", label: "کارفرما", desc: "ایجاد و مدیریت پروژه‌ها" },
-  { value: "developer", label: "برنامه‌نویس", desc: "انجام وظایف پروژه‌ها" },
-  { value: "manager", label: "مدیر پروژه", desc: "مدیریت تیم و پروژه‌ها" },
+  { value: "client", label: "هنرجو", desc: "یادگیری، ثبت‌نام و استفاده از مربی هوشمند" },
+  { value: "developer", label: "همکار محتوا", desc: "کمک در تولید محتوا و سناریو" },
+  { value: "manager", label: "مدیر آموزشی", desc: "مدیریت آموزش‌ها و کتابخانه" },
 ];
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("developer");
+  const [role, setRole] = useState("client");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -48,20 +48,20 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Logo */}
+      <div className="w-full max-w-xl">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <svg className="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-            </svg>
+          <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg text-3xl">
+            ✨
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">ثبت‌نام در TeamCoder</h1>
-          <p className="text-gray-500 mt-2">حساب کاربری خود را بسازید</p>
+          <h1 className="text-2xl font-bold text-gray-900">ثبت‌نام در دیجی‌آموزش</h1>
+          <p className="text-gray-500 mt-2">حساب کاربری‌ات را بساز و وارد پنل آموزشی شو</p>
         </div>
 
-        {/* Form */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+          <div className="mb-6 rounded-2xl bg-blue-50 border border-blue-200 p-4 text-sm text-blue-900 leading-7">
+            اگر دیتابیس واقعی هنوز وصل نشده باشد، ثبت‌نام فعلاً در <b>حالت نمایشی</b> انجام می‌شود تا بتوانی ظاهر پنل و تجربهٔ کاربر را ببینی 👌
+          </div>
+
           {error && (
             <div className="mb-4 px-4 py-3 bg-red-50 text-red-700 rounded-xl text-sm">
               {error}
@@ -117,7 +117,7 @@ export default function RegisterPage() {
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 نقش شما
               </label>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {roles.map((r) => (
                   <button
                     key={r.value}
@@ -130,7 +130,7 @@ export default function RegisterPage() {
                     }`}
                   >
                     <p className="text-sm font-medium">{r.label}</p>
-                    <p className="text-xs mt-1 opacity-70">{r.desc}</p>
+                    <p className="text-xs mt-1 opacity-70 leading-5">{r.desc}</p>
                   </button>
                 ))}
               </div>
@@ -146,9 +146,9 @@ export default function RegisterPage() {
           </form>
 
           <p className="text-center text-sm text-gray-500 mt-6">
-            قبلاً ثبت‌نام کرده‌اید؟{" "}
+            قبلاً ثبت‌نام کرده‌ای؟{" "}
             <Link href="/login" className="text-blue-600 font-medium hover:text-blue-700">
-              وارد شوید
+              وارد شو
             </Link>
           </p>
         </div>

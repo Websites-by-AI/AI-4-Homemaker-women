@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { hashPassword, signToken } from "@/lib/auth";
+import { buildDemoAccountFromRegister, hasRealDatabase } from "@/lib/demo";
 import { eq } from "drizzle-orm";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, password, role = "developer" } = body;
+    const { name, email, password, role = "client" } = body;
 
     if (!name || !email || !password) {
       return NextResponse.json(
@@ -16,7 +17,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if user already exists
+    if (!hasRealDatabase()) {
+      const demoUser = buildDemoAccountFromRegister({ name, email, role });
+      const token = await signToken({
+        userId: demoUser.userId,
+        email: demoUser.email,
+        role: demoUser.role,
+        name: demoUser.name,
+      });
+
+      const response = NextResponse.json({
+        demo: true,
+        message: "ثبت‌نام نمایشی انجام شد. برای ثبت‌نام دائمی کافی است DATABASE_URL واقعی را در Vercel اضافه کنیم.",
+        user: {
+          id: demoUser.userId,
+          name: demoUser.name,
+          email: demoUser.email,
+          role: demoUser.role,
+        },
+      });
+
+      response.cookies.set("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 7,
+        path: "/",
+      });
+
+      return response;
+    }
+
     const existingUser = await db
       .select()
       .from(users)
@@ -62,7 +93,7 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 7,
       path: "/",
     });
 

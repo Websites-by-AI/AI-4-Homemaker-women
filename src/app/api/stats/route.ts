@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { projects, tasks, users, payments, messages } from "@/db/schema";
 import { getSession } from "@/lib/auth";
+import { demoStatsFor, hasRealDatabase } from "@/lib/demo";
 import { sql, eq, and } from "drizzle-orm";
 
 export async function GET() {
@@ -11,7 +12,13 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get stats based on role
+    if (!hasRealDatabase()) {
+      return NextResponse.json({
+        demo: true,
+        ...demoStatsFor(session.role),
+      });
+    }
+
     const [
       totalProjects,
       activeProjects,
@@ -49,7 +56,6 @@ export async function GET() {
         ),
     ]);
 
-    // Recent projects
     const recentProjects = await db
       .select({
         id: projects.id,
@@ -61,7 +67,6 @@ export async function GET() {
       .orderBy(sql`${projects.createdAt} DESC`)
       .limit(5);
 
-    // Recent tasks assigned to user
     const myTasks = await db
       .select({
         id: tasks.id,
