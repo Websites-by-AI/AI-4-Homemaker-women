@@ -529,6 +529,7 @@ section.block{padding:70px 0;position:relative;z-index:2}
 .as-video-list{display:grid;gap:8px}
 .as-video-card{display:flex;flex-direction:column;gap:4px;background:#FFF9F3;border:1px solid #F3E4D4;border-radius:14px;padding:11px 12px;text-decoration:none;transition:transform .2s,box-shadow .2s,border-color .2s}
 .as-video-card:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm);border-color:#E7C9A5}
+.as-video-provider{font-size:.66rem;font-weight:800;letter-spacing:.2px;color:var(--primary-dark);background:var(--primary-soft);align-self:flex-start;padding:4px 9px;border-radius:999px}
 .as-video-title{font-size:.82rem;font-weight:800;color:var(--ink)}
 .as-video-reason{font-size:.72rem;color:var(--ink-soft)}
 .as-video-cta{font-size:.72rem;font-weight:800;color:var(--primary)}

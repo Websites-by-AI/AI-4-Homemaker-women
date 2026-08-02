@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { aiConfigured } from "@/lib/ai";
 import { answerWithRag } from "@/lib/rag";
-import { suggestYoutubeVideos } from "@/lib/youtube-suggestions";
+import { suggestLearningResources } from "@/lib/education-resources";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
         "سلام! 🌸 من مربی هوشمند دیجی‌آموزش هستم. فعلاً موتور هوش مصنوعی وصل نشده (کلید OPENROUTER_API_KEY یا HF_TOKEN لازم است)، " +
         "به‌همین خاطر در حالت نمایشی‌ام. بعد از اتصال، بر اساس PDFها، ویدیوها و مقالات آموزشی، قدم‌به‌قدم جوابت می‌دهم! 🤖",
       sources: [],
-      videos: suggestYoutubeVideos(message, []),
+      resources: suggestLearningResources(message, []),
     });
   }
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       answer,
       sources,
-      videos: suggestYoutubeVideos(message, sources),
+      resources: suggestLearningResources(message, sources),
     });
   } catch (e) {
     console.error("AI chat error:", e);

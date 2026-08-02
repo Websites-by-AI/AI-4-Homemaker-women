@@ -4,12 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import SiteChrome from "@/components/SiteChrome";
 
-type VideoSuggestion = { title: string; url: string; reason: string };
+type LearningResource = { provider?: "youtube" | "aparat" | "faradars"; title: string; url: string; reason: string };
 type Msg = {
   role: "user" | "assistant";
   content: string;
   sources?: string[];
-  videos?: VideoSuggestion[];
+  resources?: LearningResource[];
   demo?: boolean;
 };
 type Doc = { id: number; title: string; sourceType: string; sourceRef: string | null; chunkCount: number; createdAt: string };
@@ -27,7 +27,7 @@ const DEFAULT_MESSAGES: Msg[] = [
   {
     role: "assistant",
     content:
-      "سلام! من مربی هوشمند دیجی‌آموزش هستم 🤖🎓\nبر اساس PDFها، ویدیوها و منابع آموزشی سایت، قدم‌به‌قدم و شخصی‌سازی‌شده جوابت می‌دهم. برای هر سؤال هم چند لینک جست‌وجوی یوتیوب مرتبط بهت پیشنهاد می‌دهم ✨",
+      "سلام! من مربی هوشمند دیجی‌آموزش هستم 🤖🎓\nبر اساس PDFها، ویدیوها و منابع آموزشی سایت، قدم‌به‌قدم و شخصی‌سازی‌شده جوابت می‌دهم. برای هر سؤال هم لینک‌های آموزشی بیشتر از YouTube، Aparat و Faradars بهت پیشنهاد می‌دهم ✨",
   },
 ];
 
@@ -125,7 +125,7 @@ export default function AssistantPage() {
           role: "assistant",
           content: d.answer || d.error || "متأسفم، خطایی پیش آمد 🙏",
           sources: d.sources,
-          videos: d.videos,
+          resources: d.resources || d.videos,
           demo: d.demo,
         },
       ]);
@@ -179,7 +179,7 @@ export default function AssistantPage() {
               <div className="as-avatar">🤖</div>
               <div>
                 <h1>مربی هوشمند دیجی‌آموزش</h1>
-                <p>RAG — جواب از روی PDFها، ویدیوها و جست‌وجوی آموزشی یوتیوب 📚🎬</p>
+                <p>RAG — جواب از روی PDFها، ویدیوها و لینک‌های آموزشی YouTube / Aparat / Faradars 📚🎬</p>
               </div>
               <span className="as-badge">{docs.length} سند آموزشی</span>
               <button className="as-clear-btn" onClick={clearChat} title="پاک‌کردن تاریخچهٔ گفت‌وگو">🗑</button>
@@ -214,21 +214,24 @@ export default function AssistantPage() {
                         {m.sources.map((s) => <span key={s} className="as-source-chip">{s}</span>)}
                       </div>
                     )}
-                    {!!m.videos?.length && (
+                    {!!m.resources?.length && (
                       <div className="as-videos">
-                        <b>🎬 ویدیوهای پیشنهادی یوتیوب:</b>
+                        <b>🎓 آموزش‌های بیشتر در وب:</b>
                         <div className="as-video-list">
-                          {m.videos.map((video) => (
+                          {m.resources.map((resource) => (
                             <a
-                              key={video.url}
+                              key={resource.url}
                               className="as-video-card"
-                              href={video.url}
+                              href={resource.url}
                               target="_blank"
                               rel="noreferrer"
                             >
-                              <span className="as-video-title">{video.title}</span>
-                              <span className="as-video-reason">{video.reason}</span>
-                              <span className="as-video-cta">باز کردن در یوتیوب ↗</span>
+                              <span className="as-video-provider">
+                                {resource.provider === "youtube" ? "YouTube" : resource.provider === "aparat" ? "Aparat" : resource.provider === "faradars" ? "Faradars" : "منبع آموزشی"}
+                              </span>
+                              <span className="as-video-title">{resource.title}</span>
+                              <span className="as-video-reason">{resource.reason}</span>
+                              <span className="as-video-cta">باز کردن لینک آموزش ↗</span>
                             </a>
                           ))}
                         </div>

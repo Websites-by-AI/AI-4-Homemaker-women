@@ -2,6 +2,7 @@
 
 import { useEffect, useState, use } from "react";
 import Link from "next/link";
+import { buildEducationLinks } from "@/lib/education-resources";
 
 interface Business {
   id: number;
@@ -220,6 +221,7 @@ export default function LearnPage({
   const [curriculum, setCurriculum] = useState<Step[]>([]);
   const [openStep, setOpenStep] = useState<number | null>(1);
   const [completed, setCompleted] = useState<Set<number>>(new Set());
+  const [eduQuery, setEduQuery] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -235,6 +237,7 @@ export default function LearnPage({
           if (biz) {
             setBusiness(biz);
             setCurriculum(getCurriculum(biz));
+            setEduQuery(biz.name);
           }
         }
       } catch (e) {
@@ -275,6 +278,10 @@ export default function LearnPage({
   }
 
   const progress = Math.round((completed.size / 10) * 100);
+  const educationResources = buildEducationLinks(
+    business.name,
+    eduQuery.trim() && eduQuery.trim() !== business.name ? eduQuery.trim() : "آموزش"
+  );
 
   return (
     <div className="min-h-screen bg-[#fafbff]">
@@ -352,6 +359,61 @@ export default function LearnPage({
           <p className="text-violet-200 text-xs mt-3">
             همه ابزارها رایگان هستند. در هر مرحله مشخص شده که از کدام ابزار استفاده کنید.
           </p>
+        </div>
+      </section>
+
+      {/* More education search */}
+      <section className="max-w-4xl mx-auto px-6 pb-4">
+        <div className="bg-white/80 backdrop-blur-xl rounded-2xl border border-white/90 shadow-sm p-6 md:p-7">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-5">
+            <div>
+              <h3 className="text-lg font-black text-gray-900 mb-1">🔎 آموزش‌های بیشتر در همین حوزه</h3>
+              <p className="text-sm text-gray-500 leading-7">
+                اگر می‌خواهی بیرون از سایت هم آموزش بیشتری ببینی، موضوع موردنظرت را بنویس تا لینک جست‌وجوی آماده در
+                <b> یوتیوب</b>، <b>آپارات</b> و <b>فرادرس</b> داشته باشی.
+              </p>
+            </div>
+            <div className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-3 py-2 self-start md:self-auto">
+              مخصوص حوزه: {business.name}
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row gap-3 mb-5">
+            <input
+              value={eduQuery}
+              onChange={(e) => setEduQuery(e.target.value)}
+              className="flex-1 px-4 py-3.5 bg-gray-50/90 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 outline-none transition-all text-sm"
+              placeholder="مثلاً: کپشن‌نویسی، فروش لباس، خیاطی مانتو، بسته‌بندی هدیه"
+            />
+            <button
+              type="button"
+              onClick={() => setEduQuery(business.name)}
+              className="px-4 py-3.5 bg-gray-100 text-gray-700 rounded-xl font-bold text-sm hover:bg-gray-200 transition-colors"
+            >
+              بازگشت به موضوع اصلی
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {educationResources.map((resource) => (
+              <a
+                key={resource.url}
+                href={resource.url}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all"
+              >
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className="text-xs font-black px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">
+                    {resource.provider === "youtube" ? "YouTube" : resource.provider === "aparat" ? "Aparat" : "Faradars"}
+                  </span>
+                  <span className="text-gray-400">↗</span>
+                </div>
+                <h4 className="font-bold text-gray-900 text-sm leading-7 mb-2">{resource.title}</h4>
+                <p className="text-xs text-gray-500 leading-6">{resource.reason}</p>
+              </a>
+            ))}
+          </div>
         </div>
       </section>
 
