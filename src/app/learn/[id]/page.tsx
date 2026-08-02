@@ -58,7 +58,7 @@ function getCurriculum(biz: Business): Step[] {
       tasks: [
         "لیست کردن حداقل ۵ محصول/خدمت قابل ارائه",
         "مقایسه سودآوری هر کدام",
-        "انتخ��ب ۱ تا ۳ محصول اصلی برای شروع",
+        "انتخاب ۱ تا ۳ محصول اصلی برای شروع",
       ],
       tip: "از ChatGPT بخواهید: «لیست ۱۰ محصول پرفروش در حوزه [نام] بنویس و حاشیه سود هر کدام رو تخمین بزن.»",
     },
@@ -285,7 +285,7 @@ export default function LearnPage({
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
               <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
             </div>
-            <span className="text-xl font-bold text-gray-900">TeamCoder</span>
+            <span className="text-xl font-bold text-gray-900">دیجی‌آموزش</span>
           </Link>
           <Link href="/discover" className="text-sm text-gray-500 hover:text-emerald-600">
             ← بازگشت به کشف کسب‌وکار
@@ -491,7 +491,7 @@ export default function LearnPage({
                 ارسال نمونه‌کار
               </Link>
               <Link href="/academy" className="px-6 py-3 bg-emerald-800 text-white rounded-xl font-bold hover:bg-emerald-900 transition-colors">
-                آکادمی اقتصاد خالق
+                آکادمی دیجی‌آموزش
               </Link>
             </div>
           </div>
@@ -501,7 +501,7 @@ export default function LearnPage({
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-10">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-gray-500 text-sm">مسیر آموزشی {business.name} — TeamCoder Academy © ۲۰۲۴</p>
+          <p className="text-gray-500 text-sm">مسیر آموزشی {business.name} — دیجی‌آموزش © ۲۰۲۶</p>
         </div>
       </footer>
     </div>

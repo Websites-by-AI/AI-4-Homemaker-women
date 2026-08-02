@@ -36,15 +36,23 @@ export default function SiteChrome({ active, children }: { active: string; child
         <div className="container header-inner">
           <Link href="/" className="logo"><LogoMark /> دیجی‌آموزش</Link>
           <nav className={`main-nav${menuOpen ? " open" : ""}`} onClick={(e) => { if ((e.target as HTMLElement).tagName === "A") setMenuOpen(false); }}>
+            <Link href="/" className={active === "home" ? "active" : ""}>خانه</Link>
             <Link href="/#path">مسیر رشد</Link>
             <Link href="/#businesses">حوزه‌های کسب‌وکار</Link>
             <Link href="/blog" className={active === "blog" ? "active" : ""}>وبلاگ</Link>
             <Link href="/video" className={active === "video" ? "active" : ""}>استودیوی ویدیو</Link>
+            <Link href="/business-model" className={active === "business-model" ? "active" : ""}>مدل کسب‌وکار</Link>
             <Link href="/assistant" className={active === "assistant" ? "active" : ""}>🤖 مربی هوشمند</Link>
-            <Link href="/academy">آکادمی</Link>
+            <Link href="/academy" className={active === "academy" ? "active" : ""}>آکادمی</Link>
           </nav>
-          <Link href="/register" className="btn btn-primary btn-header">شروع مسیر</Link>
-          <button className="menu-toggle" aria-label="منو" onClick={() => setMenuOpen((v) => !v)}>☰</button>
+          <div className="header-actions">
+            <Link href="/login" className="btn btn-ghost btn-header">ورود</Link>
+            <Link href="/register" className="btn btn-primary btn-header">شروع مسیر</Link>
+            <button className="menu-toggle" aria-label="باز کردن منو" aria-expanded={menuOpen} onClick={() => setMenuOpen((v) => !v)}>
+              <span>☰</span>
+              <small>منو</small>
+            </button>
+          </div>
         </div>
       </header>
       {children}

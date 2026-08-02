@@ -23,14 +23,25 @@ const SUGGESTIONS = [
 
 const TYPE_ICON: Record<string, string> = { pdf: "📕", youtube: "🎬", text: "📝" };
 
+const DEFAULT_MESSAGES: Msg[] = [
+  {
+    role: "assistant",
+    content:
+      "سلام! من مربی هوشمند دیجی‌آموزش هستم 🤖🎓\nبر اساس PDFها، ویدیوها و منابع آموزشی سایت، قدم‌به‌قدم و شخصی‌سازی‌شده جوابت می‌دهم. برای هر سؤال هم چند لینک جست‌وجوی یوتیوب مرتبط بهت پیشنهاد می‌دهم ✨",
+  },
+];
+
+function getInitialMessages(): Msg[] {
+  if (typeof window === "undefined") return DEFAULT_MESSAGES;
+  try {
+    const saved = localStorage.getItem("digi-chat");
+    if (saved) return JSON.parse(saved);
+  } catch { /* بی‌اثر */ }
+  return DEFAULT_MESSAGES;
+}
+
 export default function AssistantPage() {
-  const [messages, setMessages] = useState<Msg[]>([
-    {
-      role: "assistant",
-      content:
-        "سلام! من مربی هوشمند دیجی‌آموزش هستم 🤖🎓\nبر اساس PDFها، ویدیوها و منابع آموزشی سایت، قدم‌به‌قدم و شخصی‌سازی‌شده جوابت می‌دهم. برای هر سؤال هم چند لینک جست‌وجوی یوتیوب مرتبط بهت پیشنهاد می‌دهم ✨",
-    },
-  ]);
+  const [messages, setMessages] = useState<Msg[]>(getInitialMessages);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [needLogin, setNeedLogin] = useState(false);
@@ -87,12 +98,8 @@ export default function AssistantPage() {
   }
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    try {
-      const saved = localStorage.getItem("digi-chat");
-      if (saved) setMessages(JSON.parse(saved));
-    } catch { /* بی‌اثر */ }
-    loadDocs();
+    const timer = window.setTimeout(() => { void loadDocs(); }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   async function send(text?: string) {

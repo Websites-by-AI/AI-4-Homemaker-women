@@ -73,14 +73,18 @@ export default function HomePage() {
             <a href="#course">ساختار دوره</a>
             <Link href="/blog">وبلاگ</Link>
             <Link href="/video">استودیوی ویدیو</Link>
+            <Link href="/business-model">مدل کسب‌وکار</Link>
             <Link href="/academy">آکادمی</Link>
             <Link href="/assistant" style={{ color: "var(--primary)", fontWeight: 800 }}>🤖 مربی هوشمند</Link>
           </nav>
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          <div className="header-actions">
             <Link href="/login" className="btn btn-ghost btn-header" style={{ padding: "10px 20px" }}>ورود</Link>
             <Link href="/register" className="btn btn-primary btn-header">ثبت‌نام</Link>
+            <button className="menu-toggle" aria-label="باز کردن منو" aria-expanded={menuOpen} onClick={() => setMenuOpen((v) => !v)}>
+              <span>☰</span>
+              <small>منو</small>
+            </button>
           </div>
-          <button className="menu-toggle" aria-label="منو" onClick={() => setMenuOpen((v) => !v)}>☰</button>
         </div>
       </header>
 
