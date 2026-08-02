@@ -428,7 +428,7 @@ section.block{padding:70px 0;position:relative;z-index:2}
 .acc-subtitle{display:block;font-weight:600;color:var(--ink-soft);font-size:.82rem;line-height:1.7;opacity:1;visibility:visible}
 .acc-arrow{flex-shrink:0;width:32px;height:32px;border-radius:10px;background:var(--bg);display:grid;place-items:center;color:var(--ink-soft);transition:.3s}
 .acc-item.open .acc-arrow{transform:rotate(180deg);background:var(--c-soft);color:var(--c)}
-.acc-
+.acc-body{max-height:0;overflow:hidden;transition:max-height .45s ease}
 .acc-body-in{padding:0 24px 26px}
 .hook{background:linear-gradient(135deg,var(--coral-soft),#FFF1DA);border-radius:14px;padding:14px 20px;font-weight:700;font-size:.95rem;margin-bottom:20px;display:flex;gap:10px}
 .hook span:first-child{flex-shrink:0}
@@ -436,8 +436,8 @@ section.block{padding:70px 0;position:relative;z-index:2}
 .board-title{font-weight:900;font-size:.95rem;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:var(--c)}
 .scene{display:grid;grid-template-columns:110px 1fr;gap:0;border-radius:14px;overflow:hidden;margin-bottom:8px;box-shadow:var(--shadow-sm)}
 .scene .sc-time{background:var(--c-soft);color:var(--c);font-weight:800;font-size:.78rem;display:grid;place-items:center;padding:14px 8px;text-align:center;line-height:1.6}
-.scene .sc-
-.scene .sc-body p{font-size:.87rem;line-height:1.75}
+.scene .sc-body{background:#fff;padding:14px 18px}
+.scene .sc-body p{font-size:.87rem;line-height:1.75;margin:0}
 .scene .sc-body .sc-txt{color:var(--c);font-size:.8rem;font-weight:700;margin-top:4px}
 .mini-label{font-size:.78rem;font-weight:800;color:var(--ink-soft);margin:18px 0 8px}
 
