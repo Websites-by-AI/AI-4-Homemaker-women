@@ -53,7 +53,10 @@ export async function POST(req: NextRequest) {
   } catch (e) {
     console.error("AI chat error:", e);
     return NextResponse.json(
-      { error: "مربی هوشمند فعلاً در دسترس نیست؛ کمی بعد دوباره تلاش کن 🙏" },
+      {
+        error: "مربی هوشمند فعلاً در دسترس نیست؛ کمی بعد دوباره تلاش کن 🙏",
+        resources: suggestLearningResources(message, []),
+      },
       { status: 502 }
     );
   }
