@@ -1,9 +1,32 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { businessCategories } from "@/db/schema";
+import { businesses as staticBusinesses } from "@/lib/digi-content";
+import { hasRealDatabase } from "@/lib/demo";
 import { eq, sql } from "drizzle-orm";
 
+function demoCategories() {
+  return staticBusinesses.map((item, index) => ({
+    id: index + 1,
+    name: item.name,
+    icon: item.icon,
+    description: `مسیر آموزشی، تولید محتوا و فروش آنلاین برای «${item.name}» با کمک ابزارهای ساده و هوش مصنوعی.`,
+    difficulty: index % 3 === 0 ? "easy" : index % 3 === 1 ? "medium" : "hard",
+    startupCost: index % 2 === 0 ? "کم تا متوسط" : "خیلی کم تا کم",
+    monthlyIncome: "۳ تا ۱۵ میلیون تومان",
+    skillsNeeded: JSON.stringify(["آشنایی پایه با حوزه", "یادگیری تولید محتوا", "صبر و استمرار"]),
+    aiToolsUsage: JSON.stringify(item.items),
+    contentIdeas: JSON.stringify(item.items.map((x) => `آموزش و محتوای کوتاه درباره ${x}`)),
+    sortOrder: index + 1,
+    isActive: true,
+  }));
+}
+
 export async function GET() {
+  if (!hasRealDatabase()) {
+    return NextResponse.json({ demo: true, categories: demoCategories() });
+  }
+
   try {
     const categories = await db
       .select()
@@ -19,7 +42,13 @@ export async function GET() {
 }
 
 export async function POST() {
-  // Seed business categories
+  if (!hasRealDatabase()) {
+    return NextResponse.json({
+      demo: true,
+      message: "در حالت دمو، دسته‌بندی‌ها به‌صورت آماده از محتوای سایت خوانده می‌شوند.",
+    });
+  }
+
   try {
     const existing = await db
       .select({ count: sql<number>`count(*)::int` })

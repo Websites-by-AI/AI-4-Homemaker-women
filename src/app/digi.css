@@ -133,13 +133,14 @@ section.block{padding:96px 0;position:relative}
 .search-box input:focus{border-color:var(--primary);box-shadow:0 0 0 5px rgba(108,76,241,.12)}
 .search-box svg{position:absolute;right:18px;top:50%;transform:translateY(-50%);width:22px;height:22px;color:var(--ink-soft)}
 .biz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.biz-card{background:#fff;border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-sm);border:1.5px solid transparent;transition:.3s;position:relative;overflow:hidden}
+.biz-card{background:#fff;border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-sm);border:1.5px solid transparent;transition:.3s;position:relative;overflow:hidden;height:100%}
 .biz-card::after{content:'';position:absolute;width:130px;height:130px;border-radius:50%;background:var(--card-soft,var(--primary-soft));left:-46px;top:-46px;z-index:0;transition:.35s}
 .biz-card:hover{transform:translateY(-8px);box-shadow:var(--shadow-md);border-color:var(--card-soft,var(--primary-soft))}
 .biz-card:hover::after{transform:scale(1.25)}
-.biz-icon{width:60px;height:60px;border-radius:18px;background:var(--card-soft,var(--primary-soft));display:grid;place-items:center;font-size:1.8rem;margin-bottom:18px;position:relative;z-index:1}
-.biz-card h3{font-size:1.12rem;font-weight:800;margin-bottom:14px;position:relative;z-index:1}
-.biz-card h3 .ai-note{font-size:.72rem;font-weight:700;color:var(--primary);background:var(--primary-soft);border-radius:8px;padding:2px 10px;margin-inline-start:8px;vertical-align:middle}
+.biz-icon{width:60px;height:60px;border-radius:18px;background:var(--card-soft,var(--primary-soft));display:grid;place-items:center;font-size:1.8rem;margin-bottom:16px;position:relative;z-index:1}
+.biz-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;position:relative;z-index:1;margin-bottom:14px}
+.biz-card h3{font-size:1.08rem;font-weight:800;margin:0;line-height:1.9;flex:1 1 180px;min-width:0}
+.ai-note{font-size:.72rem;font-weight:700;color:var(--primary);background:var(--primary-soft);border-radius:999px;padding:4px 10px;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
 .biz-card ul{display:flex;flex-direction:column;gap:9px;position:relative;z-index:1}
 .biz-card ul li{font-size:.9rem;color:var(--ink-soft);display:flex;gap:9px;align-items:flex-start;line-height:1.7}
 .biz-card ul li::before{content:'✦';color:var(--card-color,var(--primary));font-size:.75rem;margin-top:6px}

@@ -154,7 +154,10 @@ export default function HomePage() {
               return (
                 <div className="biz-card reveal in" key={b.name} style={{ "--card-color": c, "--card-soft": soft } as CSSProperties}>
                   <div className="biz-icon">{b.icon}</div>
-                  <h3>{b.name}<span className="ai-note">با AI</span></h3>
+                  <div className="biz-head">
+                    <h3>{b.name}</h3>
+                    <span className="ai-note">با کمک AI</span>
+                  </div>
                   <ul>{b.items.map((t) => <li key={t}>{t}</li>)}</ul>
                 </div>
               );
