@@ -19,8 +19,8 @@ const trainingCards = [
     icon: "💡",
     gradient: "from-amber-400 to-orange-500",
     shadow: "shadow-orange-500/20",
-    title: "ایده‌پردازی ریلز با ChatGPT و Gemini",
-    desc: "یاد بگیرید چطور با هوش مصنوعی ایده‌های خلاقانه برای ریلز پیدا کنید، سناریو بنویسید و موضوعات ترند را شناسایی کنید.",
+    title: "ایده‌پردازی ریلز با Arena.ai و Gemini",
+    desc: "یاد بگیرید چطور با ابزارهای هوش مصنوعی مثل Arena.ai ایده‌های خلاقانه برای ریلز پیدا کنید، سناریو بنویسید و موضوعات ترند را شناسایی کنید.",
     badge: "AI",
   },
   {
@@ -60,7 +60,7 @@ const checklist = [
 const tools = [
   { name: "CapCut", icon: "✂️", color: "from-violet-500 to-purple-600", desc: "تدوین ویدیو" },
   { name: "Canva", icon: "🎨", color: "from-cyan-400 to-blue-500", desc: "طراحی گرافیک" },
-  { name: "ChatGPT", icon: "🤖", color: "from-emerald-400 to-green-500", desc: "ایده و سناریو" },
+  { name: "Arena.ai", icon: "🟣", color: "from-emerald-400 to-green-500", desc: "ایده و سناریو" },
   { name: "Gemini", icon: "✨", color: "from-blue-400 to-indigo-500", desc: "هوش مصنوعی گوگل" },
   { name: "Instagram", icon: "📸", color: "from-pink-500 to-rose-500", desc: "انتشار ریلز" },
 ];
@@ -115,7 +115,7 @@ export default function CollaboratePage() {
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
               <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
             </div>
-            <span className="text-xl font-bold text-gray-900">TeamCoder</span>
+            <span className="text-xl font-bold text-gray-900">دیجی‌آموزش</span>
           </Link>
           <div className="flex items-center gap-3">
             <Link href="/login" className="px-5 py-2.5 text-gray-600 font-medium hover:text-blue-600 transition-colors">ورود</Link>
@@ -141,7 +141,7 @@ export default function CollaboratePage() {
             با تیم ما
           </h1>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
-            فرم ثبت‌نام → نمونه‌کار → آموزش رایگان با AI → پروژه آزمایشی → همکاری رسمی
+            فرم ثبت‌نام → نمونه‌کار → آموزش رایگان با AI و Arena.ai → پروژه آزمایشی → همکاری رسمی
           </p>
         </div>
       </section>
@@ -512,9 +512,9 @@ export default function CollaboratePage() {
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center">
               <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
             </div>
-            <span className="text-lg font-bold">TeamCoder</span>
+            <span className="text-lg font-bold">دیجی‌آموزش</span>
           </div>
-          <p className="text-gray-500 text-sm">© ۲۰۲۴ TeamCoder. تمامی حقوق محفوظ است.</p>
+          <p className="text-gray-500 text-sm">© ۲۰۲۶ دیجی‌آموزش. تمامی حقوق محفوظ است.</p>
         </div>
       </footer>
     </div>

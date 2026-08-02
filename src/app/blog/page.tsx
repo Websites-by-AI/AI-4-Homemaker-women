@@ -23,10 +23,10 @@ export default function BlogPage() {
         <div className="container">
           <span className="crumb"><Link href="/">خانه</Link> ← وبلاگ</span>
           <h1>برای هر کسب‌وکار، یک <span className="hl">راهنمای کامل</span> داریم</h1>
-          <p>در هر مقاله می‌گوییم برای حوزه‌ات دقیقاً <b>چه آموزش‌هایی لازم است</b>، با چه <b>تکنیک‌هایی محتوا</b> تولید کنی و <b>سایتت</b> را چطور بسازی که بفروشد.</p>
+          <p>در هر مقاله می‌گوییم برای حوزه‌ات دقیقاً <b>چه آموزش‌هایی لازم است</b>، با چه <b>تکنیک‌هایی محتوا</b> تولید کنی، <b>سایتت</b> را چطور بسازی که بفروشد و چطور از <b>Arena.ai</b> برای تولید محتوای ساده و کم‌هزینه کمک بگیری.</p>
           <div className="tools-bar">
             <div className="search-box">
-              <input type="text" value={q} onChange={(e) => setQ(e.target.value)} placeholder="جست‌وجو در مقاله‌ها… مثلاً کیک، سایت، محتوا" />
+              <input type="text" value={q} onChange={(e) => setQ(e.target.value)} placeholder="جست‌وجو در مقاله‌ها… مثلاً کیک، Arena.ai، سایت، محتوا" />
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
             </div>
           </div>

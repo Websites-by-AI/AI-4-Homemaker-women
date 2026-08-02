@@ -10,6 +10,7 @@ import { aiDocuments, aiChunks } from "@/db/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import { embedTexts, chatCompletion, aiBackend, type ChatMessage } from "@/lib/ai";
 import seedData from "@/data/knowledge-seed.json";
+import { ARTICLES as BLOG_ARTICLES } from "@/lib/digi-content";
 
 /** کانوانسیون e5: برای بک‌اند HF به query/passage پیشوند می‌زنیم */
 const qPrefix = (t: string) => (aiBackend() === "hf" ? "query: " + t : t);
@@ -25,6 +26,10 @@ function buildSeedTexts(): SeedChunk[] {
   for (const a of seedData.articles as { slug: string; title: string; category: string; introducer: string; need: string[]; content: string[]; site: string[]; tip: string }[]) {
     const body = `عنوان: ${a.title} (${a.category})\nمقدمه: ${a.introducer}\nآموزش‌های لازم: ${a.need.join("؛ ")}\nتکنیک‌های تولید محتوا: ${a.content.join("؛ ")}\nتکنیک‌های ساخت سایت: ${a.site.join("؛ ")}\nنکتهٔ طلایی: ${a.tip}`;
     out.push(...chunkText(body, 1200, 150).map((c) => ({ content: c, title: `مقاله: ${a.title}`, vec: null })));
+  }
+  for (const a of BLOG_ARTICLES.filter((item) => item.slug.startsWith("arena-ai-"))) {
+    const body = `عنوان: ${a.n} (${a.tag})\nمقدمه: ${a.intro}\nآموزش‌های لازم: ${a.need.join("؛ ")}\nتکنیک‌های تولید محتوا: ${a.content.join("؛ ")}\nتکنیک‌های ساخت سایت: ${a.site.join("؛ ")}\nنکتهٔ طلایی: ${a.tip}`;
+    out.push(...chunkText(body, 1200, 150).map((c) => ({ content: c, title: `مقاله: ${a.n}`, vec: null })));
   }
   for (const b of seedData.businesses as { name: string; items: string[] }[]) {
     out.push({ content: `کسب‌وکار خانگی «${b.name}»: ${b.items.join("؛ ")}`, title: `کسب‌وکار: ${b.name}`, vec: null });

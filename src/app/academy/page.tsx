@@ -68,7 +68,7 @@ const example = {
 
 const tools = [
   { name: "CapCut", icon: "✂️", desc: "تدوین ویدیو رایگان" },
-  { name: "ChatGPT", icon: "🤖", desc: "ایده و کپشن" },
+  { name: "Arena.ai", icon: "🟣", desc: "ایده، تقویم و کپشن" },
   { name: "Gemini", icon: "✨", desc: "هشتگ و ترند" },
   { name: "Canva", icon: "🎨", desc: "طراحی کاور" },
   { name: "Instagram", icon: "📸", desc: "انتشار و فروش" },
@@ -84,7 +84,7 @@ export default function AcademyPage() {
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
               <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
             </div>
-            <span className="text-xl font-bold text-gray-900">TeamCoder</span>
+            <span className="text-xl font-bold text-gray-900">دیجی‌آموزش</span>
           </Link>
           <div className="flex items-center gap-3">
             <Link href="/collaborate" className="px-5 py-2.5 bg-violet-600 text-white rounded-xl font-medium hover:bg-violet-700 transition-colors shadow-lg shadow-violet-500/20">ثبت‌نام در آکادمی</Link>
@@ -109,8 +109,8 @@ export default function AcademyPage() {
             بسازید
           </h1>
           <p className="text-lg md:text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed mb-10">
-            آکادمی اقتصاد خالق برای خانم‌های خانه‌دار و نسل Z.
-            مهارت واقعی یاد بگیرید، پیج حرفه‌ای بسازید، محصول بفروشید و درآمد ایجاد کنید.
+            آکادمی دیجی‌آموزش برای خانم‌های خانه‌دار و نسل Z.
+            مهارت واقعی یاد بگیرید، با ابزارهایی مثل Arena.ai راحت‌تر محتوا بسازید، پیج حرفه‌ای بسازید و درآمد ایجاد کنید.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link href="/collaborate#apply" className="px-8 py-4 bg-gradient-to-r from-violet-600 to-purple-600 text-white rounded-2xl font-black text-lg shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50 hover:-translate-y-1 transition-all duration-300">
@@ -383,9 +383,9 @@ export default function AcademyPage() {
             <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-500 rounded-lg flex items-center justify-center">
               <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
             </div>
-            <span className="text-lg font-bold">TeamCoder Academy</span>
+            <span className="text-lg font-bold">دیجی‌آموزش</span>
           </div>
-          <p className="text-gray-500 text-sm">آکادمی اقتصاد خالق — © ۲۰۲۴</p>
+          <p className="text-gray-500 text-sm">دیجی‌آموزش — آموزش کسب‌وکار خانگی با هوش مصنوعی © ۲۰۲۶</p>
         </div>
       </footer>
     </div>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type CSSProperties } from "react";
 import Link from "next/link";
-import { businesses, episodes } from "@/lib/digi-content";
+import { ARTICLES, businesses, episodes } from "@/lib/digi-content";
 import { HERO_IMG } from "@/lib/hero-img";
 import "./digi.css";
 
@@ -23,7 +23,8 @@ const PALETTE = [
 const FEATURED = [
   { href: "/blog/roadmap-first-sale", c: "#6C4CF1", s: "#EEE9FE", tag: "🗺️ شروع مسیر", t: "از ایده تا اولین فروش؛ نقشهٔ راه کسب‌وکار خانگی", p: "قبل از هر ابزاری، نقشهٔ راه لازم داری: چه آموزشی، چه محتوایی و سایتت را کجا بگذاری تا به اولین فروش برسی.", m: "۷" },
   { href: "/blog/ai-content-techniques", c: "#0FA896", s: "#DFF7F4", tag: "🤖 هوش مصنوعی", t: "تکنیک‌های تولید محتوا با AI که واقعاً جواب می‌دهند", p: "پرامپت‌نویسی درست، قاعدهٔ ۵×۱، ساخت تقویم ۳۰ روزه و تبدیل کپشن به مقالهٔ سئوشدهٔ سایت.", m: "۶" },
-  { href: "/blog/website-for-home-biz", c: "#5D63EA", s: "#E9EBFE", tag: "🌐 ساخت سایت", t: "چرا کسب‌وکار خانگی‌ات به سایت نیاز دارد و چطور بسازیش؟", p: "پیج ویترین است اما سایت مغازهٔ خود توست؛ راهنمای صفر تا صد دامنه، لندینگ، فرم سفارش و سئو.", m: "۶" },
+  { href: "/blog/arena-ai-content-calendar", c: "#D43D96", s: "#FCE9F4", tag: "🟣 Arena.ai", t: "چطور با Arena.ai تقویم محتوایی رایگان و سریع بسازیم؟", p: "یاد بگیر چطور از Arena.ai برای ایده، برنامه هفتگی محتوا، کپشن و ساخت مقاله استفاده کنی؛ ساده، سریع و کم‌هزینه.", m: "۶" },
+  { href: "/blog/arena-ai-reels-prompts", c: "#E8920C", s: "#FFF1DA", tag: "🎬 Arena.ai", t: "آموزش ساخت هوک، سناریو و کپشن ریلز با Arena.ai", p: "برای هر ریلز، هوک ۳ ثانیه‌ای، سناریو، متن روی تصویر و CTA بگیر و سریع‌تر محتوا بساز.", m: "۷" },
 ];
 
 function LogoMark() {
@@ -90,12 +91,12 @@ export default function HomePage() {
         <div className="blob blob-3"></div>
         <div className="container hero-grid">
           <div>
-            <span className="hero-badge"><span className="dot"></span> دیجی‌آموزش؛ آکادمی دیجیتال کسب‌وکارهای خانگی با هوش مصنوعی</span>
-            <h1>کسب‌وکار خانگی‌ات را <br />از صفر تا <span className="hl">فروش آنلاین</span> پیش ببر</h1>
-            <p className="lead">برای هر کسب‌وکار خانگی یک مسیر آموزشی کامل می‌سازیم: یادگیری مهارت، استفاده از هوش مصنوعی، ساخت برند، تولید محتوا و فروش آنلاین؛ همه مرحله‌به‌مرحله.</p>
+            <span className="hero-badge"><span className="dot"></span> دیجی‌آموزش؛ آموزش سادهٔ کسب‌وکار خانگی با ابزارهای رایگان مثل Arena.ai</span>
+            <h1>کسب‌وکار خانگی‌ات را <br />با <span className="hl">محتوای هوشمند</span> و فروش آنلاین پیش ببر</h1>
+            <p className="lead">برای هر کسب‌وکار خانگی یک مسیر آموزشی کامل می‌سازیم: یادگیری مهارت، کار با ابزارهای رایگان مثل Arena.ai، ساخت برند، تولید محتوا و فروش آنلاین؛ همه ساده، مرحله‌به‌مرحله و قابل اجرا.</p>
             <div className="hero-cta">
               <a href="#businesses" className="btn btn-primary">حوزه‌ات را انتخاب کن 🚀</a>
-              <Link href="/video" className="btn btn-ghost">🎬 استودیوی ویدیو</Link>
+              <Link href="/blog/arena-ai-content-calendar" className="btn btn-ghost">🟣 آموزش Arena.ai</Link>
             </div>
             <div className="hero-stats">
               <div className="stat"><b>۱۵+</b><span>حوزهٔ کسب‌وکار خانگی</span></div>
@@ -201,7 +202,7 @@ export default function HomePage() {
           <div className="sec-head reveal">
             <span className="sec-tag coral">وبلاگ آموزشی</span>
             <h2>برای هر کسب‌وکار، یک راهنمای عملی</h2>
-            <p>در وبلاگ برای هر حوزه می‌گوییم دقیقاً چه آموزش‌هایی لازم داری، با چه تکنیک‌هایی محتوا بسازی و سایتت را چطور راه بیندازی.</p>
+            <p>در وبلاگ برای هر حوزه می‌گوییم دقیقاً چه آموزش‌هایی لازم داری، با چه تکنیک‌هایی محتوا بسازی، سایتت را چطور راه بیندازی و چطور با Arena.ai سریع‌تر و رایگان‌تر محتوا تولید کنی.</p>
           </div>
           <div className="blog-grid">
             {FEATURED.map((f) => (
@@ -214,7 +215,7 @@ export default function HomePage() {
             ))}
           </div>
           <div className="blog-cta reveal">
-            <Link href="/blog" className="btn btn-primary">مشاهدهٔ همهٔ ۱۸ راهنما 📚</Link>
+            <Link href="/blog" className="btn btn-primary">مشاهدهٔ همهٔ {toFa(ARTICLES.length)} راهنما 📚</Link>
             <Link href="/video" className="btn btn-ghost" style={{ marginInlineStart: 10 }}>🎬 استودیوی ویدیو</Link>
           </div>
         </div>

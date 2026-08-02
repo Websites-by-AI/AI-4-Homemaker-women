@@ -184,7 +184,7 @@ export default function DiscoverPage() {
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
               <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
             </div>
-            <span className="text-xl font-bold text-gray-900">TeamCoder</span>
+            <span className="text-xl font-bold text-gray-900">دیجی‌آموزش</span>
           </Link>
           <div className="flex gap-3">
             <Link href="/academy" className="px-4 py-2 text-violet-700 font-medium hover:text-violet-800 text-sm">آکادمی</Link>
@@ -213,7 +213,7 @@ export default function DiscoverPage() {
               </h1>
               <p className="text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed mb-10">
                 با پاسخ به ۵ سوال ساده، کسب‌وکار خانگی مناسب علاقه و مهارتت رو پیدا کن.
-                بدون سرمایه زیاد، فقط با موبایل و هوش مصنوعی.
+                بدون سرمایه زیاد، فقط با موبایل و ابزارهای ساده‌ای مثل Arena.ai.
               </p>
               <button
                 onClick={() => setStep("quiz")}
@@ -522,7 +522,7 @@ export default function DiscoverPage() {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-10">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-gray-500 text-sm">آکادمی اقتصاد خالق — TeamCoder © ۲۰۲۴</p>
+          <p className="text-gray-500 text-sm">دیجی‌آموزش — کشف مسیر کسب‌وکار خانگی © ۲۰۲۶</p>
         </div>
       </footer>
     </div>
