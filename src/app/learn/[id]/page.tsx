@@ -2,7 +2,7 @@
 
 import { useEffect, useState, use } from "react";
 import Link from "next/link";
-import { buildEducationLinks } from "@/lib/education-resources";
+import { buildEducationLinks, type LearningResource } from "@/lib/education-resources";
 
 interface Business {
   id: number;
@@ -222,6 +222,11 @@ export default function LearnPage({
   const [openStep, setOpenStep] = useState<number | null>(1);
   const [completed, setCompleted] = useState<Set<number>>(new Set());
   const [eduQuery, setEduQuery] = useState("");
+  const [fieldQuestion, setFieldQuestion] = useState("");
+  const [fieldAiLoading, setFieldAiLoading] = useState(false);
+  const [fieldAiAnswer, setFieldAiAnswer] = useState("");
+  const [fieldAiSources, setFieldAiSources] = useState<string[]>([]);
+  const [fieldAiResources, setFieldAiResources] = useState<LearningResource[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -238,6 +243,7 @@ export default function LearnPage({
             setBusiness(biz);
             setCurriculum(getCurriculum(biz));
             setEduQuery(biz.name);
+            setFieldQuestion(`برای ${biz.name} از کجا شروع کنم؟`);
           }
         }
       } catch (e) {
@@ -256,6 +262,32 @@ export default function LearnPage({
       else next.add(stepNum);
       return next;
     });
+  }
+
+  async function askFieldAI() {
+    const q = fieldQuestion.trim();
+    if (!q || !business || fieldAiLoading) return;
+    setFieldAiLoading(true);
+    try {
+      const res = await fetch("/api/ai/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: `برای حوزه «${business.name}»: ${q}`,
+          history: [],
+        }),
+      });
+      const data = await res.json();
+      setFieldAiAnswer(data.answer || data.error || "فعلاً نتیجه‌ای برنگشت.");
+      setFieldAiSources(data.sources || []);
+      setFieldAiResources(data.resources || []);
+    } catch {
+      setFieldAiAnswer("فعلاً اتصال برقرار نشد؛ کمی بعد دوباره امتحان کن.");
+      setFieldAiSources([]);
+      setFieldAiResources(buildEducationLinks(business.name, q));
+    } finally {
+      setFieldAiLoading(false);
+    }
   }
 
   if (loading) {
@@ -414,6 +446,72 @@ export default function LearnPage({
               </a>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* AI helper for this field */}
+      <section className="max-w-4xl mx-auto px-6 pb-6">
+        <div className="bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 rounded-3xl p-6 md:p-7 text-white shadow-xl">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
+            <div>
+              <h3 className="text-lg md:text-xl font-black mb-1">🤖 راهنمای هوشمند این حوزه</h3>
+              <p className="text-sm text-violet-100 leading-7">
+                این بخش از همان مربی هوشمند سایت استفاده می‌کند و اگر HuggingFace فعال باشد، پاسخ دقیق‌تر و مرحله‌به‌مرحله می‌دهد.
+              </p>
+            </div>
+            <div className="text-xs font-bold px-3 py-2 rounded-full bg-white/15 self-start md:self-auto">
+              AI backend: HuggingFace / OpenRouter
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row gap-3 mb-4">
+            <input
+              value={fieldQuestion}
+              onChange={(e) => setFieldQuestion(e.target.value)}
+              className="flex-1 px-4 py-3.5 rounded-2xl border border-white/20 bg-white/10 text-white placeholder:text-violet-100/75 outline-none focus:ring-2 focus:ring-white/30"
+              placeholder={`مثلاً: برای ${business.name} چه نوع محتوا بهتر جواب می‌دهد؟`}
+            />
+            <button
+              type="button"
+              onClick={askFieldAI}
+              disabled={fieldAiLoading || !fieldQuestion.trim()}
+              className="px-5 py-3.5 rounded-2xl bg-white text-violet-700 font-black hover:bg-violet-50 transition-colors disabled:opacity-60"
+            >
+              {fieldAiLoading ? "در حال گرفتن پاسخ..." : "پرسیدن از AI"}
+            </button>
+          </div>
+
+          {!!fieldAiAnswer && (
+            <div className="rounded-2xl bg-white/10 border border-white/15 p-5 space-y-4">
+              <div className="text-sm leading-8 whitespace-pre-wrap">{fieldAiAnswer}</div>
+              {!!fieldAiSources.length && (
+                <div className="flex flex-wrap gap-2">
+                  {fieldAiSources.map((source) => (
+                    <span key={source} className="text-xs px-3 py-1 rounded-full bg-white/15">{source}</span>
+                  ))}
+                </div>
+              )}
+              {!!fieldAiResources.length && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {fieldAiResources.map((resource) => (
+                    <a
+                      key={resource.url}
+                      href={resource.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-2xl bg-white text-gray-800 p-4 shadow-sm hover:shadow-md transition-all"
+                    >
+                      <div className="text-xs font-black mb-2 text-violet-700">
+                        {resource.provider === "youtube" ? "YouTube" : resource.provider === "aparat" ? "Aparat" : "Faradars"}
+                      </div>
+                      <div className="font-bold text-sm leading-7 mb-2">{resource.title}</div>
+                      <div className="text-xs text-gray-500 leading-6">{resource.reason}</div>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </section>
 

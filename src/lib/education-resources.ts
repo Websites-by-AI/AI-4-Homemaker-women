@@ -73,7 +73,7 @@ function bestTopic(question: string, sources: string[] = []): string {
 }
 
 export function buildEducationLinks(field: string, extraQuery = ""): LearningResource[] {
-  const query = `${field} ${extraQuery}`.replace(/\s+/g, " ").trim();
+  const query = [...new Set(`${field} ${extraQuery}`.replace(/\s+/g, " ").trim().split(" ").filter(Boolean))].join(" ");
   return [
     {
       provider: "youtube",
