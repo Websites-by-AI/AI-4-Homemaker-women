@@ -159,7 +159,7 @@ export default function VideoStudioPage() {
                 const isOpen = open === i;
                 return (
                   <div className={`acc-item reveal${isOpen ? " open" : ""}`} key={v.name} style={{ "--c": c, "--c-soft": soft } as CSSProperties}>
-                    <div className="acc-head" onClick={() => setOpen(isOpen ? null : i)}>
+                    <div className="acc-head" onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen}>
                       <span className="acc-ico">{v.icon}</span>
                       <div className="acc-title-wrap">
                         <h3>{v.name}</h3>
@@ -167,24 +167,26 @@ export default function VideoStudioPage() {
                       </div>
                       <span className="acc-arrow">▾</span>
                     </div>
-                    <div className="acc-body" style={{ maxHeight: isOpen ? 5000 : 0 }}>
-                      <div className="acc-body-in">
-                        <div className="hook"><span>🎣</span><span><b>قلاب (۳ ثانیهٔ اول):</b> {v.hook}</span></div>
-                        <div className="board">
-                          <p className="board-title">🎬 استوری‌بورد صحنه‌به‌صحنه</p>
-                          {v.board.map((s) => (
-                            <div className="scene" key={s[0]}>
-                              <div className="sc-time">{s[0]}</div>
-                              <div className="sc-body"><p>{s[1]}</p><p className="sc-txt">💬 متن روی تصویر: {s[2]}</p></div>
-                            </div>
-                          ))}
+                    {isOpen && (
+                      <div className="acc-body">
+                        <div className="acc-body-in">
+                          <div className="hook"><span>🎣</span><span><b>قلاب (۳ ثانیهٔ اول):</b> {v.hook}</span></div>
+                          <div className="board">
+                            <p className="board-title">🎬 استوری‌بورد صحنه‌به‌صحنه</p>
+                            {v.board.map((s) => (
+                              <div className="scene" key={s[0]}>
+                                <div className="sc-time">{s[0]}</div>
+                                <div className="sc-body"><p>{s[1]}</p><p className="sc-txt">💬 متن روی تصویر: {s[2]}</p></div>
+                              </div>
+                            ))}
+                          </div>
+                          <p className="mini-label">🇬🇧 پرامپت انگلیسی برای Google Flow / Veo:</p>
+                          <PromptBox label="Video prompt" icon="⚙️" text={v.prompt} en />
+                          <p className="mini-label">✨ پرامپت سناریونویسی جمینی (مخصوص همین حوزه):</p>
+                          <PromptBox label="سناریو جدید بساز" icon="✍️" text={geminiTpl(v.name)} />
                         </div>
-                        <p className="mini-label">🇬🇧 پرامپت انگلیسی برای Google Flow / Veo:</p>
-                        <PromptBox label="Video prompt" icon="⚙️" text={v.prompt} en />
-                        <p className="mini-label">✨ پرامپت سناریونویسی جمینی (مخصوص همین حوزه):</p>
-                        <PromptBox label="سناریو جدید بساز" icon="✍️" text={geminiTpl(v.name)} />
                       </div>
-                    </div>
+                    )}
                   </div>
                 );
               })}
