@@ -161,7 +161,10 @@ export default function VideoStudioPage() {
                   <div className={`acc-item reveal${isOpen ? " open" : ""}`} key={v.name} style={{ "--c": c, "--c-soft": soft } as CSSProperties}>
                     <div className="acc-head" onClick={() => setOpen(isOpen ? null : i)}>
                       <span className="acc-ico">{v.icon}</span>
-                      <h3>{v.name}<small>{v.title}</small></h3>
+                      <div className="acc-title-wrap">
+                        <h3>{v.name}</h3>
+                        <span className="acc-subtitle">{v.title}</span>
+                      </div>
                       <span className="acc-arrow">▾</span>
                     </div>
                     <div className="acc-body" style={{ maxHeight: isOpen ? 5000 : 0 }}>

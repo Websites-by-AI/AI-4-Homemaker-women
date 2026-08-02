@@ -423,8 +423,9 @@ section.block{padding:70px 0;position:relative;z-index:2}
 .acc-item.open{border-color:var(--c-soft)}
 .acc-head{display:flex;align-items:center;gap:16px;padding:20px 24px;cursor:pointer;user-select:none}
 .acc-ico{flex-shrink:0;width:52px;height:52px;border-radius:16px;background:var(--c-soft);display:grid;place-items:center;font-size:1.5rem}
-.acc-head h3{font-size:1.02rem;font-weight:800;flex:1}
-.acc-head small{display:block;font-weight:600;color:var(--ink-soft);font-size:.82rem;margin-top:2px}
+.acc-title-wrap{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.acc-head h3{font-size:1.02rem;font-weight:800;margin:0;line-height:1.7;color:var(--ink)}
+.acc-subtitle{display:block;font-weight:600;color:var(--ink-soft);font-size:.82rem;line-height:1.7;opacity:1;visibility:visible}
 .acc-arrow{flex-shrink:0;width:32px;height:32px;border-radius:10px;background:var(--bg);display:grid;place-items:center;color:var(--ink-soft);transition:.3s}
 .acc-item.open .acc-arrow{transform:rotate(180deg);background:var(--c-soft);color:var(--c)}
 .acc-
